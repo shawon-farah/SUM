@@ -56,14 +56,14 @@
 		89DB3A07166B9C3500567967 /* NSStream+SKPSMTPExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSStream+SKPSMTPExtensions.m"; sourceTree = "<group>"; };
 		89DB3A08166B9C3500567967 /* SKPSMTPMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKPSMTPMessage.h; sourceTree = "<group>"; };
 		89DB3A09166B9C3500567967 /* SKPSMTPMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKPSMTPMessage.m; sourceTree = "<group>"; };
-		89F93B55166B59A1000A279E /* SUM1.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SUM1.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		89F93B55166B59A1000A279E /* SUM.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SUM.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		89F93B59166B59A1000A279E /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		89F93B5B166B59A1000A279E /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		89F93B5D166B59A1000A279E /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
-		89F93B61166B59A1000A279E /* SUM1-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "SUM1-Info.plist"; sourceTree = "<group>"; };
+		89F93B61166B59A1000A279E /* SUM-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "SUM-Info.plist"; sourceTree = "<group>"; };
 		89F93B63166B59A1000A279E /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		89F93B65166B59A1000A279E /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		89F93B67166B59A1000A279E /* SUM1-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SUM1-Prefix.pch"; sourceTree = "<group>"; };
+		89F93B67166B59A1000A279E /* SUM-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SUM-Prefix.pch"; sourceTree = "<group>"; };
 		89F93B68166B59A1000A279E /* SUMAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SUMAppDelegate.h; sourceTree = "<group>"; };
 		89F93B69166B59A1000A279E /* SUMAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SUMAppDelegate.m; sourceTree = "<group>"; };
 		89F93B6B166B59A1000A279E /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
@@ -160,7 +160,7 @@
 		89F93B56166B59A1000A279E /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				89F93B55166B59A1000A279E /* SUM1.app */,
+				89F93B55166B59A1000A279E /* SUM.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -209,10 +209,10 @@
 			isa = PBXGroup;
 			children = (
 				89F93BA3166B5DB4000A279E /* placeholder.png */,
-				89F93B61166B59A1000A279E /* SUM1-Info.plist */,
+				89F93B61166B59A1000A279E /* SUM-Info.plist */,
 				89F93B62166B59A1000A279E /* InfoPlist.strings */,
 				89F93B65166B59A1000A279E /* main.m */,
-				89F93B67166B59A1000A279E /* SUM1-Prefix.pch */,
+				89F93B67166B59A1000A279E /* SUM-Prefix.pch */,
 				89F93B6B166B59A1000A279E /* Default.png */,
 				89F93B6D166B59A1000A279E /* Default@2x.png */,
 				89F93B6F166B59A1000A279E /* Default-568h@2x.png */,
@@ -223,9 +223,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		89F93B54166B59A1000A279E /* SUM1 */ = {
+		89F93B54166B59A1000A279E /* SUM */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 89F93B7F166B59A2000A279E /* Build configuration list for PBXNativeTarget "SUM1" */;
+			buildConfigurationList = 89F93B7F166B59A2000A279E /* Build configuration list for PBXNativeTarget "SUM" */;
 			buildPhases = (
 				89F93B51166B59A1000A279E /* Sources */,
 				89F93B52166B59A1000A279E /* Frameworks */,
@@ -235,9 +235,9 @@
 			);
 			dependencies = (
 			);
-			name = SUM1;
+			name = SUM;
 			productName = SUM1;
-			productReference = 89F93B55166B59A1000A279E /* SUM1.app */;
+			productReference = 89F93B55166B59A1000A279E /* SUM.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -250,7 +250,7 @@
 				LastUpgradeCheck = 0450;
 				ORGANIZATIONNAME = "Satnford, CA";
 			};
-			buildConfigurationList = 89F93B4F166B59A1000A279E /* Build configuration list for PBXProject "SUM1" */;
+			buildConfigurationList = 89F93B4F166B59A1000A279E /* Build configuration list for PBXProject "SUM" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -262,7 +262,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				89F93B54166B59A1000A279E /* SUM1 */,
+				89F93B54166B59A1000A279E /* SUM */,
 			);
 		};
 /* End PBXProject section */
@@ -389,9 +389,9 @@
 					"\"$(SRCROOT)\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "SUM1/SUM1-Prefix.pch";
-				INFOPLIST_FILE = "SUM1/SUM1-Info.plist";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				GCC_PREFIX_HEADER = "SUM1/SUM-Prefix.pch";
+				INFOPLIST_FILE = "SUM1/SUM-Info.plist";
+				PRODUCT_NAME = SUM;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -404,9 +404,9 @@
 					"\"$(SRCROOT)\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "SUM1/SUM1-Prefix.pch";
-				INFOPLIST_FILE = "SUM1/SUM1-Info.plist";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				GCC_PREFIX_HEADER = "SUM1/SUM-Prefix.pch";
+				INFOPLIST_FILE = "SUM1/SUM-Info.plist";
+				PRODUCT_NAME = SUM;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -414,7 +414,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		89F93B4F166B59A1000A279E /* Build configuration list for PBXProject "SUM1" */ = {
+		89F93B4F166B59A1000A279E /* Build configuration list for PBXProject "SUM" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				89F93B7D166B59A2000A279E /* Debug */,
@@ -423,7 +423,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		89F93B7F166B59A2000A279E /* Build configuration list for PBXNativeTarget "SUM1" */ = {
+		89F93B7F166B59A2000A279E /* Build configuration list for PBXNativeTarget "SUM" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				89F93B80166B59A2000A279E /* Debug */,

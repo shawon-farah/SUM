@@ -80,7 +80,10 @@
             [self.tableView reloadData];
         } else {
             // Log details of the failure
-            NSLog(@"Error: %@ %@", error, [error userInfo]);
+            NSLog(@"Error: %@", error);
+            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Could not connect to server." delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
+            [alertView show];
+            [alertView release];
         }
         [MBProgressHUD hideHUDForView:self.navigationController.view animated:YES];
     }];
