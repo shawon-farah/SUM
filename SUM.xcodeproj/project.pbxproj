@@ -27,8 +27,8 @@
 		89F93B7C166B59A2000A279E /* SUMDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 89F93B7A166B59A2000A279E /* SUMDetailViewController.xib */; };
 		89F93B83166B5AA8000A279E /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 89F93B82166B5AA8000A279E /* Parse.framework */; };
 		89F93B85166B5ABA000A279E /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 89F93B84166B5ABA000A279E /* AudioToolbox.framework */; };
-		89F93B87166B5AC2000A279E /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 89F93B86166B5AC2000A279E /* Accounts.framework */; };
-		89F93B89166B5ADA000A279E /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 89F93B88166B5ADA000A279E /* AdSupport.framework */; };
+		89F93B87166B5AC2000A279E /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 89F93B86166B5AC2000A279E /* Accounts.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		89F93B89166B5ADA000A279E /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 89F93B88166B5ADA000A279E /* AdSupport.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		89F93B8B166B5AE6000A279E /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 89F93B8A166B5AE6000A279E /* CFNetwork.framework */; };
 		89F93B8D166B5AF5000A279E /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 89F93B8C166B5AF5000A279E /* CoreLocation.framework */; };
 		89F93B8F166B5AFE000A279E /* libz.1.1.3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 89F93B8E166B5AFE000A279E /* libz.1.1.3.dylib */; };
@@ -36,7 +36,7 @@
 		89F93B93166B5B1E000A279E /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 89F93B92166B5B1E000A279E /* MobileCoreServices.framework */; };
 		89F93B95166B5B2C000A279E /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 89F93B94166B5B2C000A279E /* QuartzCore.framework */; };
 		89F93B97166B5B32000A279E /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 89F93B96166B5B32000A279E /* Security.framework */; };
-		89F93B99166B5B3B000A279E /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 89F93B98166B5B3B000A279E /* Social.framework */; };
+		89F93B99166B5B3B000A279E /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 89F93B98166B5B3B000A279E /* Social.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		89F93B9B166B5B43000A279E /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 89F93B9A166B5B43000A279E /* StoreKit.framework */; };
 		89F93B9D166B5B4E000A279E /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 89F93B9C166B5B4E000A279E /* SystemConfiguration.framework */; };
 		89F93BA1166B5C08000A279E /* SUMImageWithTwoSubtitleCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 89F93B9F166B5C08000A279E /* SUMImageWithTwoSubtitleCell.m */; };
@@ -391,6 +391,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "SUM1/SUM-Prefix.pch";
 				INFOPLIST_FILE = "SUM1/SUM-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				PRODUCT_NAME = SUM;
 				WRAPPER_EXTENSION = app;
 			};
@@ -406,6 +407,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "SUM1/SUM-Prefix.pch";
 				INFOPLIST_FILE = "SUM1/SUM-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				PRODUCT_NAME = SUM;
 				WRAPPER_EXTENSION = app;
 			};
