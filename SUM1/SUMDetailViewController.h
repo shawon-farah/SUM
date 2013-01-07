@@ -39,6 +39,8 @@
     IBOutlet UIActivityIndicatorView *spinner4; 
 //    IBOutlet UIActivityIndicatorView *Spinner;
     IBOutlet UITextView *details;
+    
+    IBOutlet UIScrollView *scrollView;
 }
 
 @property (nonatomic, retain) PFObject *detailItem;

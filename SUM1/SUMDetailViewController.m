@@ -167,6 +167,20 @@
         
         details.text = [self.detailItem objectForKey:@"body"];
     }
+    
+    scrollView.contentSize = CGSizeMake(320, 548);
+}
+
+- (SKPSMTPMessage*)configureSMTPMessage
+{
+    SKPSMTPMessage *message = [[SKPSMTPMessage alloc] init];
+    message.relayHost = @"smtp.sendgrid.net";
+    message.requiresAuth = YES;
+    message.login = @"wientjes";
+    message.pass = @"asf4565a";
+    message.wantsSecure = YES;
+    
+    return message;
 }
 
 - (void)sendEmail:(UIAlertView *)alertView
@@ -178,17 +192,11 @@
     NSNumber *postId = [self.detailItem objectForKey:@"post_id"];
     NSNumber *securityId = [self.detailItem objectForKey:@"security_id"];
     
-    SKPSMTPMessage *message = [[SKPSMTPMessage alloc] init];
+    SKPSMTPMessage *message = [self configureSMTPMessage];
     
     message.fromEmail = @"noreply@supost.com";
-    message.toEmail = [self.detailItem objectForKey:@"email"]; /*@"abdullah.shawon@gmail.com";*/
+    message.toEmail = /*[self.detailItem objectForKey:@"email"];*/ @"abdullah.shawon@gmail.com";
     message.subject = [NSString stringWithFormat:@"SUpost - %@ response: %@", fromEmail, postTitle];
-    
-    message.relayHost = @"smtp.sendgrid.net";
-    message.requiresAuth = YES;
-    message.login = @"wientjes";
-    message.pass = @"asf4565a";
-    message.wantsSecure = YES;
     
     message.delegate = self;
     
@@ -218,7 +226,48 @@
     [self.navigationController.view addSubview:hud];
     
     hud.delegate = self;
-    hud.labelText = @"Sending";
+    hud.labelText = @"Sending..";
+    [hud show:YES];
+    
+    [message send];
+}
+
+- (void)sendReport:(NSString*)reason
+{
+    NSString *postTitle = [self.detailItem objectForKey:@"name"];
+    NSNumber *timeNumber = [self.detailItem objectForKey:@"time_posted"];
+    NSNumber *postId = [self.detailItem objectForKey:@"post_id"];
+    NSNumber *securityId = [self.detailItem objectForKey:@"security_id"];
+    
+    SKPSMTPMessage *message = [self configureSMTPMessage];
+    
+    message.toEmail = /*@"supost.com@gmail.com";*/ @"abdullah.shawon@gmail.com";
+    message.fromEmail = @"noreply@supost.com";
+    message.subject = [NSString stringWithFormat:@"SUpost - Report: %@", postTitle];
+    message.delegate = self;
+    
+    NSString *messageBody = [NSString stringWithFormat:@"%@ \n\n", reason];
+    messageBody = [messageBody stringByAppendingFormat:@"%@ - Posted: %@ \n", postTitle, [self getTimeString:timeNumber]];
+    messageBody = [messageBody stringByAppendingString:@"----------------------------------------------------------------------------------------------------\n"];
+    messageBody = [messageBody stringByAppendingString:@"To delete this post, use following link and click 'Delete your post.'\n"];
+    messageBody = [messageBody stringByAppendingFormat:@"http://www.supost.com/add/publish/%@?security_id=%@ \n", postId, securityId];
+    
+    NSMutableArray *parts_to_send = [NSMutableArray array];
+    
+    NSDictionary *plain_text_part = [NSDictionary dictionaryWithObjectsAndKeys:
+                                     @"text/plain", kSKPSMTPPartContentTypeKey,
+                                     [messageBody stringByAppendingString:@"\n"], kSKPSMTPPartMessageKey,
+                                     @"8bit", kSKPSMTPPartContentTransferEncodingKey,
+                                     nil];
+    [parts_to_send addObject:plain_text_part];
+    
+    message.parts = parts_to_send;
+    
+    MBProgressHUD *hud = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
+    [self.navigationController.view addSubview:hud];
+    
+    hud.delegate = self;
+    hud.labelText = @"Sending..";
     [hud show:YES];
     
     [message send];
@@ -226,7 +275,7 @@
 
 - (IBAction)replyTapped:(id)sender
 {
-    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Reply to this Post" message:@" " delegate:self cancelButtonTitle:nil otherButtonTitles:@"Send", nil];
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Reply to this Post" message:@" " delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Send", nil];
     alertView.alertViewStyle = UIAlertViewStyleLoginAndPasswordInput;
     alertView.tag = 99;
     
@@ -237,10 +286,28 @@
     [alertView show];
 }
 
+- (IBAction)report:(id)sender
+{
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Report this Post" message:@" " delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"OK", nil];
+    alertView.alertViewStyle = UIAlertViewStylePlainTextInput;
+    alertView.tag = 98;
+    [[alertView textFieldAtIndex:0] setPlaceholder:@"Reason"];
+    
+    [alertView show];
+    [alertView release];
+}
+
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     if (alertView.tag == 99) {
-        [self sendEmail:alertView];
+        if (buttonIndex != alertView.cancelButtonIndex) {
+            [self sendEmail:alertView];
+        }
+    } else if (alertView.tag == 98) {
+        if (buttonIndex != alertView.cancelButtonIndex) {
+            NSString *reason = [alertView textFieldAtIndex:0].text;
+            [self sendReport:reason];
+        }
     }
 }
 
