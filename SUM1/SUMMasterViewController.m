@@ -108,12 +108,12 @@
     } else if (timeInterval < 86400) {
     	int diff = round(timeInterval / 60 / 60);
     	return[NSString stringWithFormat:@"%d hours ago", diff];
-    } else if (timeInterval < 2629743) {
+    } else /*if (timeInterval < 2592000)*/ {
     	int diff = round(timeInterval / 60 / 60 / 24);
     	return[NSString stringWithFormat:@"%d days ago", diff];
-    } else {
+    } /*else {
     	return @"never";
-    }
+    }*/
     
 }
 
