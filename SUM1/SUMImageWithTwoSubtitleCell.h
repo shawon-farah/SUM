@@ -14,6 +14,7 @@
 @property (nonatomic, retain) IBOutlet UIImageView *imageView;
 @property (nonatomic, retain) IBOutlet UILabel *titleTextLabel;
 @property (nonatomic, retain) IBOutlet UILabel *detailsTextLabel;
+@property (nonatomic, retain) IBOutlet UILabel *subtitleTextLabel;
 @property (nonatomic, retain) IBOutlet UILabel *intervalTextLabel;
 @property (nonatomic, retain) IBOutlet UIActivityIndicatorView *spinner;
 

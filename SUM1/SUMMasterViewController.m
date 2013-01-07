@@ -117,6 +117,15 @@
     
 }
 
+- (NSString *)getTimeString:(NSNumber *)timeNumber
+{
+    NSDate *date = [NSDate dateWithTimeIntervalSince1970:[timeNumber doubleValue]];
+    NSDateFormatter *dtf = [[NSDateFormatter alloc] init];
+    [dtf setDateFormat:@"MMM dd"];
+    
+    return [dtf stringFromDate:date];
+}
+
 #pragma mark - Table View
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -170,6 +179,9 @@
     cell.titleTextLabel.text = [object objectForKey:@"name"];
     cell.detailsTextLabel.text = [object objectForKey:@"body"];
     cell.intervalTextLabel.text = [self getLastUpdateTimeInterval:[object objectForKey:@"time_posted"]];
+    
+    NSString *str = [self getTimeString:[object objectForKey:@"time_posted"]];
+    cell.subtitleTextLabel.text = str;
     
     return cell;
 }
