@@ -9,6 +9,10 @@
 /* Begin PBXBuildFile section */
 		038DA2E3169BFB22006194A2 /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 038DA2E2169BFB22006194A2 /* icon.png */; };
 		038DA2E5169BFB2B006194A2 /* icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 038DA2E4169BFB2B006194A2 /* icon@2x.png */; };
+		8920194C169C917B001FE455 /* SUMFilterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8920194A169C917B001FE455 /* SUMFilterViewController.m */; };
+		8920194D169C917B001FE455 /* SUMFilterViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8920194B169C917B001FE455 /* SUMFilterViewController.xib */; };
+		89201956169C9DA1001FE455 /* SUMCategorySelectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 89201954169C9DA1001FE455 /* SUMCategorySelectionViewController.m */; };
+		89201957169C9DA1001FE455 /* SUMCategorySelectionViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 89201955169C9DA1001FE455 /* SUMCategorySelectionViewController.xib */; };
 		89DB3A0A166B9C3500567967 /* Base64Transcoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 89DB3A01166B9C3500567967 /* Base64Transcoder.m */; };
 		89DB3A0B166B9C3500567967 /* HSK_CFUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 89DB3A03166B9C3500567967 /* HSK_CFUtilities.m */; };
 		89DB3A0C166B9C3500567967 /* NSData+Base64Additions.m in Sources */ = {isa = PBXBuildFile; fileRef = 89DB3A05166B9C3500567967 /* NSData+Base64Additions.m */; };
@@ -50,6 +54,12 @@
 /* Begin PBXFileReference section */
 		038DA2E2169BFB22006194A2 /* icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = icon.png; path = ../icon.png; sourceTree = "<group>"; };
 		038DA2E4169BFB2B006194A2 /* icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "icon@2x.png"; path = "../icon@2x.png"; sourceTree = "<group>"; };
+		89201949169C917B001FE455 /* SUMFilterViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SUMFilterViewController.h; sourceTree = "<group>"; };
+		8920194A169C917B001FE455 /* SUMFilterViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SUMFilterViewController.m; sourceTree = "<group>"; };
+		8920194B169C917B001FE455 /* SUMFilterViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SUMFilterViewController.xib; sourceTree = "<group>"; };
+		89201953169C9DA1001FE455 /* SUMCategorySelectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SUMCategorySelectionViewController.h; sourceTree = "<group>"; };
+		89201954169C9DA1001FE455 /* SUMCategorySelectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SUMCategorySelectionViewController.m; sourceTree = "<group>"; };
+		89201955169C9DA1001FE455 /* SUMCategorySelectionViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SUMCategorySelectionViewController.xib; sourceTree = "<group>"; };
 		89DB3A00166B9C3500567967 /* Base64Transcoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Base64Transcoder.h; sourceTree = "<group>"; };
 		89DB3A01166B9C3500567967 /* Base64Transcoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Base64Transcoder.m; sourceTree = "<group>"; };
 		89DB3A02166B9C3500567967 /* HSK_CFUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSK_CFUtilities.h; sourceTree = "<group>"; };
@@ -138,6 +148,12 @@
 				89F93B74166B59A2000A279E /* SUMDetailViewController.h */,
 				89F93B75166B59A2000A279E /* SUMDetailViewController.m */,
 				89F93B7A166B59A2000A279E /* SUMDetailViewController.xib */,
+				89201949169C917B001FE455 /* SUMFilterViewController.h */,
+				8920194A169C917B001FE455 /* SUMFilterViewController.m */,
+				8920194B169C917B001FE455 /* SUMFilterViewController.xib */,
+				89201953169C9DA1001FE455 /* SUMCategorySelectionViewController.h */,
+				89201954169C9DA1001FE455 /* SUMCategorySelectionViewController.m */,
+				89201955169C9DA1001FE455 /* SUMCategorySelectionViewController.xib */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -320,6 +336,8 @@
 				89F93BA4166B5DB4000A279E /* placeholder.png in Resources */,
 				038DA2E3169BFB22006194A2 /* icon.png in Resources */,
 				038DA2E5169BFB2B006194A2 /* icon@2x.png in Resources */,
+				8920194D169C917B001FE455 /* SUMFilterViewController.xib in Resources */,
+				89201957169C9DA1001FE455 /* SUMCategorySelectionViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -341,6 +359,8 @@
 				89DB3A0D166B9C3500567967 /* NSStream+SKPSMTPExtensions.m in Sources */,
 				89DB3A0E166B9C3500567967 /* SKPSMTPMessage.m in Sources */,
 				89FC3B40166CF7A3008607D4 /* MBProgressHUD.m in Sources */,
+				8920194C169C917B001FE455 /* SUMFilterViewController.m in Sources */,
+				89201956169C9DA1001FE455 /* SUMCategorySelectionViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

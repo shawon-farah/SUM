@@ -24,6 +24,24 @@
     [Parse setApplicationId:@"RpdufmbOLoCCFkUJ9lUHESu6Xb8pYJT8EJXpJ60v"
                   clientKey:@"uDe5rnD4rbjMVP76BmyJ9M8BmjHi4vdKZqPR4KII"];
     
+    PFQuery *queryCategory = [PFQuery queryWithClassName:@"category"];
+    [queryCategory orderByAscending:@"category_id"];
+    self.categoryList = (NSMutableArray*)[queryCategory findObjects];
+    /*[queryCategory findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if (!error) {
+            self.categoryList = [[NSMutableArray alloc] initWithArray:objects];
+        }
+    }];*/
+    PFQuery *querySubcategory = [PFQuery queryWithClassName:@"subcategory"];
+    [querySubcategory orderByAscending:@"category_id"];
+    self.subcategoryList = (NSMutableArray*)[querySubcategory findObjects];
+    /*[querySubcategory findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if (!error) {
+            self.subcategoryList = [[NSMutableArray alloc] initWithArray:objects];
+        }
+    }];*/
+    NSLog(@"Category: %d, Subcategory: %d", [self.categoryList count], [self.subcategoryList count]);
+    
     self.window = [[[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]] autorelease];
     // Override point for customization after application launch.
 

@@ -14,4 +14,8 @@
 
 @property (strong, nonatomic) UINavigationController *navigationController;
 
+@property (strong, nonatomic) NSMutableArray *categoryList;
+@property (strong, nonatomic) NSMutableArray *subcategoryList;
+@property (strong, nonatomic) NSMutableArray *postsList;
+
 @end

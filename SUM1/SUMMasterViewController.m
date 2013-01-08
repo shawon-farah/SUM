@@ -11,6 +11,7 @@
 #import "SUMDetailViewController.h"
 #import "SUMImageWithTwoSubtitleCell.h"
 #import "MBProgressHUD.h"
+#import "SUMAppDelegate.h"
 
 #define IMAGE_URL_SUFFIX @"http://supost.com/uploads/post/"
 
@@ -78,6 +79,8 @@
         if (!error) {
             self._postsList = [[NSMutableArray alloc] initWithArray:objects];
             [self.tableView reloadData];
+            SUMAppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
+            appDelegate.postsList = self._postsList;
         } else {
             // Log details of the failure
             NSLog(@"Error: %@", error);
