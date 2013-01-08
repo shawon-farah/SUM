@@ -195,7 +195,7 @@
     SKPSMTPMessage *message = [self configureSMTPMessage];
     
     message.fromEmail = @"noreply@supost.com";
-    message.toEmail = /*[self.detailItem objectForKey:@"email"];*/ @"abdullah.shawon@gmail.com";
+    message.toEmail = [self.detailItem objectForKey:@"email"]; /*@"abdullah.shawon@gmail.com";*/
     message.subject = [NSString stringWithFormat:@"SUpost - %@ response: %@", fromEmail, postTitle];
     
     message.delegate = self;
@@ -241,7 +241,7 @@
     
     SKPSMTPMessage *message = [self configureSMTPMessage];
     
-    message.toEmail = /*@"supost.com@gmail.com";*/ @"abdullah.shawon@gmail.com";
+    message.toEmail = @"supost.com@gmail.com"; /*@"abdullah.shawon@gmail.com";*/
     message.fromEmail = @"noreply@supost.com";
     message.subject = [NSString stringWithFormat:@"SUpost - Report: %@", postTitle];
     message.delegate = self;
