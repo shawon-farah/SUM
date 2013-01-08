@@ -126,6 +126,17 @@
     return [dtf stringFromDate:date];
 }
 
+- (NSString *)getDetailsText:(NSString*)detailsText
+{
+    detailsText = [detailsText stringByReplacingOccurrencesOfString:@"\n" withString:@" "];
+    detailsText = [detailsText stringByReplacingOccurrencesOfString:@"\\n" withString:@" "];
+    detailsText = [detailsText stringByReplacingOccurrencesOfString:@"<br />" withString:@" "];
+    detailsText = [detailsText stringByReplacingOccurrencesOfString:@"<br>" withString:@""];
+    detailsText = [detailsText stringByReplacingOccurrencesOfString:@"<br/>" withString:@" "];
+    
+    return detailsText;
+}
+
 #pragma mark - Table View
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -177,7 +188,7 @@
         [cell.spinner removeFromSuperview];
     
     cell.titleTextLabel.text = [object objectForKey:@"name"];
-    cell.detailsTextLabel.text = [object objectForKey:@"body"];
+    cell.detailsTextLabel.text = [self getDetailsText:[object objectForKey:@"body"]];
     cell.intervalTextLabel.text = [self getLastUpdateTimeInterval:[object objectForKey:@"time_posted"]];
     
     NSString *str = [self getTimeString:[object objectForKey:@"time_posted"]];
