@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		038DA2E3169BFB22006194A2 /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 038DA2E2169BFB22006194A2 /* icon.png */; };
+		038DA2E5169BFB2B006194A2 /* icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 038DA2E4169BFB2B006194A2 /* icon@2x.png */; };
 		89DB3A0A166B9C3500567967 /* Base64Transcoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 89DB3A01166B9C3500567967 /* Base64Transcoder.m */; };
 		89DB3A0B166B9C3500567967 /* HSK_CFUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 89DB3A03166B9C3500567967 /* HSK_CFUtilities.m */; };
 		89DB3A0C166B9C3500567967 /* NSData+Base64Additions.m in Sources */ = {isa = PBXBuildFile; fileRef = 89DB3A05166B9C3500567967 /* NSData+Base64Additions.m */; };
@@ -46,6 +48,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		038DA2E2169BFB22006194A2 /* icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = icon.png; path = ../icon.png; sourceTree = "<group>"; };
+		038DA2E4169BFB2B006194A2 /* icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "icon@2x.png"; path = "../icon@2x.png"; sourceTree = "<group>"; };
 		89DB3A00166B9C3500567967 /* Base64Transcoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Base64Transcoder.h; sourceTree = "<group>"; };
 		89DB3A01166B9C3500567967 /* Base64Transcoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Base64Transcoder.m; sourceTree = "<group>"; };
 		89DB3A02166B9C3500567967 /* HSK_CFUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSK_CFUtilities.h; sourceTree = "<group>"; };
@@ -157,6 +161,19 @@
 			name = Common;
 			sourceTree = "<group>";
 		};
+		038DA2E1169BF960006194A2 /* Graphics */ = {
+			isa = PBXGroup;
+			children = (
+				038DA2E4169BFB2B006194A2 /* icon@2x.png */,
+				038DA2E2169BFB22006194A2 /* icon.png */,
+				89F93BA3166B5DB4000A279E /* placeholder.png */,
+				89F93B6B166B59A1000A279E /* Default.png */,
+				89F93B6D166B59A1000A279E /* Default@2x.png */,
+				89F93B6F166B59A1000A279E /* Default-568h@2x.png */,
+			);
+			name = Graphics;
+			sourceTree = "<group>";
+		};
 		89DB39FF166B9C3400567967 /* SMTPSend */ = {
 			isa = PBXGroup;
 			children = (
@@ -232,14 +249,11 @@
 		89F93B60166B59A1000A279E /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				89F93BA3166B5DB4000A279E /* placeholder.png */,
+				038DA2E1169BF960006194A2 /* Graphics */,
 				89F93B61166B59A1000A279E /* SUM-Info.plist */,
 				89F93B62166B59A1000A279E /* InfoPlist.strings */,
 				89F93B65166B59A1000A279E /* main.m */,
 				89F93B67166B59A1000A279E /* SUM-Prefix.pch */,
-				89F93B6B166B59A1000A279E /* Default.png */,
-				89F93B6D166B59A1000A279E /* Default@2x.png */,
-				89F93B6F166B59A1000A279E /* Default-568h@2x.png */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -304,6 +318,8 @@
 				89F93B7C166B59A2000A279E /* SUMDetailViewController.xib in Resources */,
 				89F93BA2166B5C08000A279E /* SUMImageWithTwoSubtitleCell.xib in Resources */,
 				89F93BA4166B5DB4000A279E /* placeholder.png in Resources */,
+				038DA2E3169BFB22006194A2 /* icon.png in Resources */,
+				038DA2E5169BFB2B006194A2 /* icon@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
