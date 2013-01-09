@@ -18,6 +18,8 @@
 
 @property (nonatomic, retain) IBOutlet UITableViewCell *nibLoadedTableCell;
 
+@property (strong, nonatomic) NSMutableDictionary *filterDictionary;
+
 @property (strong, nonatomic) SUMDetailViewController *detailViewController;
 
 @end

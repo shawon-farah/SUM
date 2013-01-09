@@ -12,6 +12,7 @@
 #import "SUMImageWithTwoSubtitleCell.h"
 #import "MBProgressHUD.h"
 #import "SUMAppDelegate.h"
+#import "SUMFilterViewController.h"
 
 #define IMAGE_URL_SUFFIX @"http://supost.com/uploads/post/"
 
@@ -48,19 +49,50 @@
     [super viewDidLoad];
     
     self.navigationController.navigationBar.barStyle = UIBarStyleBlackOpaque;
+    if (!self.filterDictionary) {
+        UIBarButtonItem *buttonItem = [[UIBarButtonItem alloc] initWithTitle:@"Filter" style:UIBarButtonItemStyleBordered target:self action:@selector(filterTapped:)];
+        self.navigationItem.rightBarButtonItem = buttonItem;
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    
-    [self loadPostData];
+    if (self.filterDictionary) {
+        [self filterPosts];
+    } else
+        [self loadPostData];
 }
 
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (IBAction)filterTapped:(id)sender
+{
+    SUMFilterViewController *viewController = [[SUMFilterViewController alloc] initWithNibName:@"SUMFilterViewController" bundle:nil];
+//    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:viewController];
+//    [self.navigationController presentModalViewController:navigationController animated:YES];
+    [UIView beginAnimations:@"transition" context:nil];
+    [UIView setAnimationDuration:0.5];
+    [UIView setAnimationTransition:UIViewAnimationTransitionFlipFromLeft forView:self.navigationController.view cache:NO];
+    [self.navigationController pushViewController:viewController animated:NO];
+    [UIView commitAnimations];
+}
+
+- (void)filterPosts
+{
+    NSLog(@"%@, %@, %@", [self.filterDictionary objectForKey:@"searchText"], [self.filterDictionary objectForKey:@"category"], [self.filterDictionary objectForKey:@"subcategory"]);
+//    NSString *searchText = [self.filterDictionary objectForKey:@"searchText"];
+    PFObject *category = [self.filterDictionary objectForKey:@"category"];
+    PFObject *subcategory = [self.filterDictionary objectForKey:@"subcategory"];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"category_id == %@ AND subcategory_id == %@", [category objectForKey:@"category_id"], [subcategory objectForKey:@"subcategory_id"]];
+    
+    SUMAppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
+    self._postsList = (NSMutableArray*)[appDelegate.postsList filteredArrayUsingPredicate:predicate];
+    [self.tableView reloadData];
 }
 
 - (void)loadPostData
@@ -129,6 +161,26 @@
     return [dtf stringFromDate:date];
 }
 
+- (NSString *)getSubcategoryName:(NSNumber*)subcategoryId
+{
+    SUMAppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"subcategory_id == %@", subcategoryId];
+    NSArray *array = [appDelegate.subcategoryList filteredArrayUsingPredicate:predicate];
+    PFObject *object = (PFObject *)[array objectAtIndex:0];
+    
+    return [object objectForKey:@"name"];
+}
+
+- (NSString *)getCategoryName:(NSNumber*)categoryId
+{
+    SUMAppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"category_id == %@", categoryId];
+    NSArray *array = [appDelegate.categoryList filteredArrayUsingPredicate:predicate];
+    PFObject *object = (PFObject *)[array objectAtIndex:0];
+    
+    return [object objectForKey:@"short_name"];
+}
+
 - (NSString *)getDetailsText:(NSString*)detailsText
 {
     detailsText = [detailsText stringByReplacingOccurrencesOfString:@"\n" withString:@" "];
@@ -154,7 +206,7 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 102.0;
+    return 98.0;
 }
 
 // Customize the appearance of table view cells.
@@ -195,6 +247,8 @@
     cell.intervalTextLabel.text = [self getLastUpdateTimeInterval:[object objectForKey:@"time_posted"]];
     
     NSString *str = [self getTimeString:[object objectForKey:@"time_posted"]];
+    str = [str stringByAppendingString:@" * Stanford, CA"];
+    str = [str stringByAppendingFormat:@" * %@ (%@)", [self getSubcategoryName:[object objectForKey:@"subcategory_id"]], [self getCategoryName:[object objectForKey:@"category_id"]]];
     cell.subtitleTextLabel.text = str;
     
     return cell;

@@ -7,11 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "SUMCategorySelectionViewController.h"
 
-@interface SUMFilterViewController : UIViewController
+@interface SUMFilterViewController : UIViewController <CategorySelectionDelegate>
 
 @property (strong, nonatomic) IBOutlet UITextField *searchTextField;
 @property (strong, nonatomic) IBOutlet UIButton *categorySelectionButton;
 @property (strong, nonatomic) IBOutlet UIButton *locationSelectionButton;
+
+@property (strong, nonatomic) NSMutableDictionary *filterDictionary;
 
 @end

@@ -16,6 +16,9 @@
 {
     [_window release];
     [_navigationController release];
+    [_categoryList release];
+    [_subcategoryList release];
+    [_postsList release];
     [super dealloc];
 }
 

@@ -7,12 +7,21 @@
 //
 
 #import "SUMCategorySelectionViewController.h"
+#import "SUMAppDelegate.h"
+#import <Parse/Parse.h>
 
 @interface SUMCategorySelectionViewController ()
 
 @end
 
 @implementation SUMCategorySelectionViewController
+
+- (void)dealloc
+{
+    [_categories release];
+    [_subcategories release];
+    [super dealloc];
+}
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -32,6 +41,11 @@
  
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    
+    SUMAppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
+    self.categories = appDelegate.categoryList;
+    self.subcategories = appDelegate.subcategoryList;
+    self.indexTitles = [self getIndexTitles];
 }
 
 - (void)didReceiveMemoryWarning
@@ -40,20 +54,49 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (NSArray *)getIndexTitles
+{
+    NSMutableArray *array = [[NSMutableArray alloc] init];
+    for (PFObject *object in self.categories) {
+        [array addObject:[object objectForKey:@"short_name"]];
+    }
+    
+    return array;
+}
+
+- (NSArray *)getSubcategoriesOfCategoryIndex:(NSInteger)index
+{
+    PFObject *aCategory = (PFObject*)[self.categories objectAtIndex:index];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"category_id == %@", [aCategory objectForKey:@"category_id"]];
+    
+    return [self.subcategories filteredArrayUsingPredicate:predicate];
+}
+
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-#warning Potentially incomplete method implementation.
     // Return the number of sections.
-    return 0;
+    return [self.categories count];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-#warning Incomplete method implementation.
     // Return the number of rows in the section.
-    return 0;
+    NSArray *array = [self getSubcategoriesOfCategoryIndex:section];
+    return [array count];
+}
+
+- (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView
+{
+    return self.indexTitles;
+}
+
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
+{
+    PFObject *aCategory = (PFObject *)[self.categories objectAtIndex:section];
+    
+    return [aCategory objectForKey:@"short_name"];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -65,6 +108,10 @@
     }
     
     // Configure the cell...
+    NSArray *array = [self getSubcategoriesOfCategoryIndex:indexPath.section];
+    PFObject *aSubcategory = (PFObject *)[array objectAtIndex:indexPath.row];
+    
+    cell.textLabel.text = [aSubcategory objectForKey:@"name"];
     
     return cell;
 }
@@ -113,13 +160,9 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     // Navigation logic may go here. Create and push another view controller.
-    /*
-     <#DetailViewController#> *detailViewController = [[<#DetailViewController#> alloc] initWithNibName:@"<#Nib name#>" bundle:nil];
-     // ...
-     // Pass the selected object to the new view controller.
-     [self.navigationController pushViewController:detailViewController animated:YES];
-     [detailViewController release];
-     */
+    NSArray *array = [self getSubcategoriesOfCategoryIndex:indexPath.section];
+    [self.categorySelectionDelegate categorySelected:[self.categories objectAtIndex:indexPath.section] withSubcategory:[array objectAtIndex:indexPath.row]];
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 @end
