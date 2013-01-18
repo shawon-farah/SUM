@@ -43,6 +43,8 @@
     IBOutlet UIScrollView *scrollView;
 }
 
-@property (nonatomic, retain) PFObject *detailItem;
+@property (strong, nonatomic) PFObject *detailItem;
+@property (assign, nonatomic) int currentIndex;
+@property (strong, nonatomic) NSMutableArray *currentPostsArray;
 
 @end

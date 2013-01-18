@@ -18,6 +18,7 @@
 - (void)dealloc
 {
     [_detailItem release];
+    [_currentPostsArray release];
     [name release];
     [interval release];
     [timePosted release];
@@ -88,6 +89,7 @@
     // Update the user interface for the detail item.
 
     if (self.detailItem) {
+        self.title = NSLocalizedString([self.detailItem objectForKey:@"name"], @"Details");
         name.text = [self.detailItem objectForKey:@"name"];
         
         NSNumber *timeNumber = [self.detailItem objectForKey:@"time_posted"];
@@ -97,6 +99,7 @@
         
         NSString *urlSuffix = @"http://supost.com/uploads/post/";
         
+        imageView1.image = [UIImage imageNamed:@"placeholder.png"];
         NSString *imageName = [self.detailItem objectForKey:@"image_source1"];
         if ([imageName length] > 0 && ![imageName isEqualToString:@"NULL"])
             dispatch_async(dispatch_get_global_queue(0,0), ^{
@@ -111,9 +114,11 @@
                     [spinner1 removeFromSuperview];
                 });
             });
-        else
+        else {
             [spinner1 removeFromSuperview];
+        }
         
+        imageView2.image = [UIImage imageNamed:@"placeholder.png"];
         imageName = [self.detailItem objectForKey:@"image_source2"];
         if ([imageName length] > 0 && ![imageName isEqualToString:@"NULL"])
             dispatch_async(dispatch_get_global_queue(0,0), ^{
@@ -128,9 +133,11 @@
                     [spinner2 removeFromSuperview];
                 });
             });
-        else
+        else {
             [spinner2 removeFromSuperview];
+        }
         
+        imageView3.image = [UIImage imageNamed:@"placeholder.png"];
         imageName = [self.detailItem objectForKey:@"image_source3"];
         if ([imageName length] > 0 && ![imageName isEqualToString:@"NULL"])
             dispatch_async(dispatch_get_global_queue(0,0), ^{
@@ -145,9 +152,11 @@
                     [spinner3 removeFromSuperview];
                 });
             });
-        else
+        else {
             [spinner3 removeFromSuperview];
+        }
         
+        imageView4.image = [UIImage imageNamed:@"placeholder.png"];
         imageName = [self.detailItem objectForKey:@"image_source4"];
         if ([imageName length] > 0 && ![imageName isEqualToString:@"NULL"])
             dispatch_async(dispatch_get_global_queue(0,0), ^{
@@ -162,8 +171,9 @@
                     [spinner4 removeFromSuperview];
                 });
             });
-        else
+        else {
             [spinner4 removeFromSuperview];
+        }
         
         details.text = [self.detailItem objectForKey:@"body"];
     }
@@ -335,13 +345,89 @@
     [alert release];
 }
 
+- (IBAction)nextPost:(id)sender
+{
+    self.currentIndex++;
+    [UIView beginAnimations:@"transition" context:nil];
+    [UIView setAnimationDuration:0.5];
+    [UIView setAnimationTransition:UIViewAnimationTransitionCurlDown forView:self.navigationController.view cache:NO];
+//        SUMDetailViewController *viewController = [[SUMDetailViewController alloc] initWithNibName:@"SUMDetailViewController" bundle:nil];
+//        viewController.detailItem = [self.currentPostsArray objectAtIndex:self.currentIndex];
+//        viewController.currentIndex = self.currentIndex;
+//        viewController.currentPostsArray = self.currentPostsArray;
+//        [self.navigationController pushViewController:viewController animated:NO];
+    self.detailItem = [self.currentPostsArray objectAtIndex:self.currentIndex];
+    [self configureView];
+    [UIView commitAnimations];
+    
+    [self setButtonPermission];
+}
+
+- (IBAction)previousPost:(id)sender
+{
+    self.currentIndex--;
+    [UIView beginAnimations:@"transition" context:nil];
+    [UIView setAnimationDuration:0.5];
+    [UIView setAnimationTransition:UIViewAnimationTransitionCurlUp forView:self.navigationController.view cache:NO];
+//        SUMDetailViewController *viewController = [[SUMDetailViewController alloc] initWithNibName:@"SUMDetailViewController" bundle:nil];
+//        viewController.detailItem = [self.currentPostsArray objectAtIndex:self.currentIndex];
+//        viewController.currentIndex = self.currentIndex;
+//        viewController.currentPostsArray = self.currentPostsArray;
+//        [self.navigationController pushViewController:viewController animated:NO];
+    self.detailItem = [self.currentPostsArray objectAtIndex:self.currentIndex];
+    [self configureView];
+    [UIView commitAnimations];
+    
+    [self setButtonPermission];
+}
+
+- (void) setButtonPermission
+{
+    NSArray *buttons = self.navigationItem.rightBarButtonItems;
+    UIBarButtonItem *buttonItem;
+    if (self.currentIndex <= 0) {
+        buttonItem = [buttons objectAtIndex:1];
+        [buttonItem setEnabled:false];
+        [(UIBarButtonItem*)[buttons objectAtIndex:0] setEnabled:YES];
+    } else if (self.currentIndex >= [self.currentPostsArray count]) {
+        [(UIBarButtonItem*)[buttons objectAtIndex:0] setEnabled:NO];
+        [(UIBarButtonItem*)[buttons objectAtIndex:1] setEnabled:YES];
+    } else {
+        [(UIBarButtonItem*)[buttons objectAtIndex:0] setEnabled:YES];
+        [(UIBarButtonItem*)[buttons objectAtIndex:1] setEnabled:YES];
+    }
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
     
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Reply" style:UIBarButtonSystemItemAction target:self action:@selector(replyTapped:)];
+//    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Reply" style:UIBarButtonSystemItemAction target:self action:@selector(replyTapped:)];
     
+    NSMutableArray *buttons = [[NSMutableArray alloc] init];
+    UIButton *button;
+    UIBarButtonItem *buttonItem;
+    
+    button = [UIButton buttonWithType:UIButtonTypeCustom];
+    button.frame = CGRectMake(0, 0, 24, 34);
+    [button setImage:[UIImage imageNamed:@"down_arrow.png"] forState:UIControlStateNormal];
+    [button addTarget:self action:@selector(nextPost:) forControlEvents:UIControlEventTouchUpInside];
+    buttonItem = [[[UIBarButtonItem alloc] initWithCustomView:button] autorelease];
+    [buttons addObject:buttonItem];
+    
+    button = [UIButton buttonWithType:UIButtonTypeCustom];
+    button.frame = CGRectMake(24, 0, 24, 34);
+    [button setImage:[UIImage imageNamed:@"up_arrow.png"] forState:UIControlStateNormal];
+    [button addTarget:self action:@selector(previousPost:) forControlEvents:UIControlEventTouchUpInside];
+    buttonItem = [[[UIBarButtonItem alloc] initWithCustomView:button] autorelease];
+    [buttons addObject:buttonItem];
+//    [button release];
+//    [buttonItem release];
+    
+    self.navigationItem.rightBarButtonItems = buttons;
+//    [buttons release];
+    [self setButtonPermission];
     [self configureView];
 }
 

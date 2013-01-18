@@ -90,6 +90,7 @@
     PFObject *subcategory = [self.filterDictionary objectForKey:@"subcategory"];
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"category_id == %@ AND subcategory_id == %@", [category objectForKey:@"category_id"], [subcategory objectForKey:@"subcategory_id"]];
     
+    self.title = NSLocalizedString([subcategory objectForKey:@"name"], @"Master");
     SUMAppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
     self._postsList = (NSMutableArray*)[appDelegate.postsList filteredArrayUsingPredicate:predicate];
     [self.tableView reloadData];
@@ -296,6 +297,8 @@
     
     PFObject *object = _postsList[indexPath.row];
     self.detailViewController.detailItem = object;
+    self.detailViewController.currentIndex = indexPath.row;
+    self.detailViewController.currentPostsArray = self._postsList;
     [self.navigationController pushViewController:self.detailViewController animated:YES];
 }
 
