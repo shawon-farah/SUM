@@ -13,6 +13,7 @@
 		8920194D169C917B001FE455 /* SUMFilterViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8920194B169C917B001FE455 /* SUMFilterViewController.xib */; };
 		89201956169C9DA1001FE455 /* SUMCategorySelectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 89201954169C9DA1001FE455 /* SUMCategorySelectionViewController.m */; };
 		89201957169C9DA1001FE455 /* SUMCategorySelectionViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 89201955169C9DA1001FE455 /* SUMCategorySelectionViewController.xib */; };
+		896CDCA616B6DE4100D51BEC /* SUMCommon.m in Sources */ = {isa = PBXBuildFile; fileRef = 896CDCA516B6DE4100D51BEC /* SUMCommon.m */; };
 		89C4D95C16A033770068382B /* down_arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 89C4D95816A033770068382B /* down_arrow.png */; };
 		89C4D95D16A033770068382B /* down_arrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 89C4D95916A033770068382B /* down_arrow@2x.png */; };
 		89C4D95E16A033770068382B /* up_arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 89C4D95A16A033770068382B /* up_arrow.png */; };
@@ -64,6 +65,8 @@
 		89201953169C9DA1001FE455 /* SUMCategorySelectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SUMCategorySelectionViewController.h; sourceTree = "<group>"; };
 		89201954169C9DA1001FE455 /* SUMCategorySelectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SUMCategorySelectionViewController.m; sourceTree = "<group>"; };
 		89201955169C9DA1001FE455 /* SUMCategorySelectionViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SUMCategorySelectionViewController.xib; sourceTree = "<group>"; };
+		896CDCA416B6DE4100D51BEC /* SUMCommon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SUMCommon.h; sourceTree = "<group>"; };
+		896CDCA516B6DE4100D51BEC /* SUMCommon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SUMCommon.m; sourceTree = "<group>"; };
 		89C4D95816A033770068382B /* down_arrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = down_arrow.png; sourceTree = "<group>"; };
 		89C4D95916A033770068382B /* down_arrow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "down_arrow@2x.png"; sourceTree = "<group>"; };
 		89C4D95A16A033770068382B /* up_arrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = up_arrow.png; sourceTree = "<group>"; };
@@ -181,6 +184,8 @@
 			children = (
 				89FC3B3E166CF7A2008607D4 /* MBProgressHUD.h */,
 				89FC3B3F166CF7A2008607D4 /* MBProgressHUD.m */,
+				896CDCA416B6DE4100D51BEC /* SUMCommon.h */,
+				896CDCA516B6DE4100D51BEC /* SUMCommon.m */,
 			);
 			name = Common;
 			sourceTree = "<group>";
@@ -377,6 +382,7 @@
 				89FC3B40166CF7A3008607D4 /* MBProgressHUD.m in Sources */,
 				8920194C169C917B001FE455 /* SUMFilterViewController.m in Sources */,
 				89201956169C9DA1001FE455 /* SUMCategorySelectionViewController.m in Sources */,
+				896CDCA616B6DE4100D51BEC /* SUMCommon.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

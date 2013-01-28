@@ -8,6 +8,8 @@
 
 #import "SUMDetailViewController.h"
 #import "SKPSMTPMessage.h"
+#import "SUMAppDelegate.h"
+#import "SUMCommon.h"
 
 @interface SUMDetailViewController ()
 - (void)configureView;
@@ -47,43 +49,6 @@
     }
 }
 
-- (NSString *)getLastUpdateTimeInterval:(NSNumber *)time
-{
-    NSDate *convertedDate = [NSDate dateWithTimeIntervalSince1970:[time doubleValue]];
-    NSLog(@"%@", convertedDate);
-    
-    double timeInterval = [convertedDate timeIntervalSinceDate:[NSDate date]];
-    
-    timeInterval = timeInterval * -1;
-    
-    if (timeInterval < 1) {
-        return @"";
-    } else if (timeInterval < 60) {
-        return @"Less than a minute ago";
-    } else if (timeInterval < 3600) {
-        int diff = round(timeInterval / 60);
-        return [NSString stringWithFormat:@"%d minutes ago", diff];
-    } else if (timeInterval < 86400) {
-    	int diff = round(timeInterval / 60 / 60);
-    	return[NSString stringWithFormat:@"%d hours ago", diff];
-    } else if (timeInterval < 2629743) {
-    	int diff = round(timeInterval / 60 / 60 / 24);
-    	return[NSString stringWithFormat:@"%d days ago", diff];
-    } else {
-    	return @"More than a month ago";
-    }
-    
-}
-
-- (NSString *)getTimeString:(NSNumber *)timeNumber
-{
-    NSDate *date = [NSDate dateWithTimeIntervalSince1970:[timeNumber doubleValue]];
-    NSDateFormatter *dtf = [[NSDateFormatter alloc] init];
-    [dtf setDateFormat:@"hh:mmaa EEEE, MMMM dd, yyyy"];
-    
-    return [dtf stringFromDate:date];
-}
-
 - (void)configureView
 {
     // Update the user interface for the detail item.
@@ -93,9 +58,16 @@
         name.text = [self.detailItem objectForKey:@"name"];
         
         NSNumber *timeNumber = [self.detailItem objectForKey:@"time_posted"];
-        interval.text = [self getLastUpdateTimeInterval:timeNumber];
+//        interval.text = [self getLastUpdateTimeInterval:timeNumber];
         
-        timePosted.text = [self getTimeString:timeNumber];
+        timePosted.text = [SUMCommon getTimeString:timeNumber];
+//        SUMAppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
+        NSString *str = [SUMCommon getDurationFromNow:timeNumber];
+        str = [str stringByAppendingFormat:@"\n%@", [SUMCommon getSubcategoryString:[self.detailItem objectForKey:@"subcategory_id"]]];
+        str = [str stringByAppendingFormat:@" (%@)", [SUMCommon getCategoryString:[self.detailItem objectForKey:@"category_id"]]];
+        str = [str stringByAppendingFormat:@"\nDate: %@", [SUMCommon getTimeString:timeNumber]];
+        
+        attributes.text = str;
         
         NSString *urlSuffix = @"http://supost.com/uploads/post/";
         
@@ -206,21 +178,20 @@
     
     message.fromEmail = @"noreply@supost.com";
     message.toEmail = [self.detailItem objectForKey:@"email"]; /*@"abdullah.shawon@gmail.com";*/
+    message.bccEmail = @"supost.com@gmail.com";
     message.subject = [NSString stringWithFormat:@"SUpost - %@ response: %@", fromEmail, postTitle];
     
     message.delegate = self;
     
     NSString *messageBody = [NSString stringWithFormat:@"%@ \n\n", userMessage];
     messageBody = [messageBody stringByAppendingFormat:@"From: %@ \n\n", fromEmail];
-    messageBody = [messageBody stringByAppendingFormat:@"%@ - Posted: %@ \n", postTitle, [self getTimeString:timeNumber]];
+    messageBody = [messageBody stringByAppendingFormat:@"%@ - Posted: %@ \n", postTitle, [SUMCommon getTimeString:timeNumber]];
     messageBody = [messageBody stringByAppendingString:@"----------------------------------------------------------------------------------------------------\n"];
     messageBody = [messageBody stringByAppendingString:@"To delete your post, use this link and click 'Delete your post.'\n"];
     messageBody = [messageBody stringByAppendingFormat:@"http://www.supost.com/add/publish/%@?security_id=%@ \n", postId, securityId];
     messageBody = [messageBody stringByAppendingString:@"----------------------------------------------------------------------------------------------------\n"];
     messageBody = [messageBody stringByAppendingString:@"Safety: Never wire transfer money and be careful of fake checks.\nProtect yourself from scams and fraud: http://supost.com/safety.html\nCaution: This message may not be from this email address. This person's identity is not verified.\nIf you received this message in error, please email contact@supost.com"];
-    
-    NSLog(@"%@", [self.detailItem objectForKey:@"email"]);
-    
+        
     NSMutableArray *parts_to_send = [NSMutableArray array];
     
     NSDictionary *plain_text_part = [NSDictionary dictionaryWithObjectsAndKeys:
@@ -257,7 +228,7 @@
     message.delegate = self;
     
     NSString *messageBody = [NSString stringWithFormat:@"%@ \n\n", reason];
-    messageBody = [messageBody stringByAppendingFormat:@"%@ - Posted: %@ \n", postTitle, [self getTimeString:timeNumber]];
+    messageBody = [messageBody stringByAppendingFormat:@"%@ - Posted: %@ \n", postTitle, [SUMCommon getTimeString:timeNumber]];
     messageBody = [messageBody stringByAppendingString:@"----------------------------------------------------------------------------------------------------\n"];
     messageBody = [messageBody stringByAppendingString:@"To delete this post, use following link and click 'Delete your post.'\n"];
     messageBody = [messageBody stringByAppendingFormat:@"http://www.supost.com/add/publish/%@?security_id=%@ \n", postId, securityId];

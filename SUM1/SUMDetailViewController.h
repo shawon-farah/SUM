@@ -29,6 +29,7 @@
     IBOutlet UILabel *name;
     IBOutlet UILabel *interval;
     IBOutlet UILabel *timePosted;
+    IBOutlet UITextView *attributes;
     IBOutlet UIImageView *imageView1;
     IBOutlet UIImageView *imageView2;
     IBOutlet UIImageView *imageView3;

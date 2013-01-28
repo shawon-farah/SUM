@@ -13,20 +13,21 @@
 #import "MBProgressHUD.h"
 #import "SUMAppDelegate.h"
 #import "SUMFilterViewController.h"
+#import "SUMCommon.h"
 
 #define IMAGE_URL_SUFFIX @"http://supost.com/uploads/post/"
 
 @interface SUMMasterViewController () {
-    NSMutableArray *_postsList;
+//    NSMutableArray *_postsList;
 }
 
-@property (nonatomic, retain) NSMutableArray *_postsList;
+//@property (nonatomic, retain) NSMutableArray *_postsList;
 
 @end
 
 @implementation SUMMasterViewController
 
-@synthesize nibLoadedTableCell, _postsList;
+@synthesize nibLoadedTableCell;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -85,15 +86,30 @@
 - (void)filterPosts
 {
     NSLog(@"%@, %@, %@", [self.filterDictionary objectForKey:@"searchText"], [self.filterDictionary objectForKey:@"category"], [self.filterDictionary objectForKey:@"subcategory"]);
-//    NSString *searchText = [self.filterDictionary objectForKey:@"searchText"];
-    PFObject *category = [self.filterDictionary objectForKey:@"category"];
-    PFObject *subcategory = [self.filterDictionary objectForKey:@"subcategory"];
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"category_id == %@ AND subcategory_id == %@", [category objectForKey:@"category_id"], [subcategory objectForKey:@"subcategory_id"]];
+    /*  if wanna run filter on last fetched posts from parse
+     *  this operation will run the filter on last fetched 100 posts 
+     */
+//    PFObject *category = [self.filterDictionary objectForKey:@"category"];
+//    PFObject *subcategory = [self.filterDictionary objectForKey:@"subcategory"];
+//    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"category_id == %@ AND subcategory_id == %@", [category objectForKey:@"category_id"], [subcategory objectForKey:@"subcategory_id"]];
+//    
+//    self.title = NSLocalizedString([subcategory objectForKey:@"name"], @"Master");
+//    SUMAppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
+//    self.postsList = (NSMutableArray*)[appDelegate.postsList filteredArrayUsingPredicate:predicate];
+//    [self.tableView reloadData];
     
-    self.title = NSLocalizedString([subcategory objectForKey:@"name"], @"Master");
-    SUMAppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
-    self._postsList = (NSMutableArray*)[appDelegate.postsList filteredArrayUsingPredicate:predicate];
-    [self.tableView reloadData];
+    /*  if wanna run filter on parse and fetch filtered data from parse 
+     *  this will run the filter on whole parse db will get the most recent 100 filtered posts
+     */
+    MBProgressHUD *hud = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
+    [self.navigationController.view addSubview:hud];
+    
+    hud.delegate = self;
+    hud.labelText = @"Loading";
+    [hud show:YES];
+    
+    [SUMCommon getPosts:self withFilter:self.filterDictionary];
+    
 }
 
 - (void)loadPostData
@@ -107,13 +123,14 @@
     
     PFQuery *query = [PFQuery queryWithClassName:@"testsupostimport"];
     [query orderByDescending:@"time_posted"];
+//    [query ]
     query.limit = 100;
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
-            self._postsList = [[NSMutableArray alloc] initWithArray:objects];
+            self.postsList = [[NSMutableArray alloc] initWithArray:objects];
             [self.tableView reloadData];
             SUMAppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
-            appDelegate.postsList = self._postsList;
+            appDelegate.postsList = self.postsList;
         } else {
             // Log details of the failure
             NSLog(@"Error: %@", error);
@@ -123,34 +140,6 @@
         }
         [MBProgressHUD hideHUDForView:self.navigationController.view animated:YES];
     }];
-}
-
-- (NSString *)getLastUpdateTimeInterval:(NSNumber *)timePosted
-{
-    NSDate *convertedDate = [NSDate dateWithTimeIntervalSince1970:[timePosted doubleValue]];
-    NSLog(@"%@", convertedDate);
-    
-    double timeInterval = [convertedDate timeIntervalSinceDate:[NSDate date]];
-    
-    timeInterval = timeInterval * -1;
-    
-    if (timeInterval < 1) {
-        return @"";
-    } else if (timeInterval < 60) {
-        return @"Less than a minute ago";
-    } else if (timeInterval < 3600) {
-        int diff = round(timeInterval / 60);
-        return [NSString stringWithFormat:@"%d minutes ago", diff];
-    } else if (timeInterval < 86400) {
-    	int diff = round(timeInterval / 60 / 60);
-    	return[NSString stringWithFormat:@"%d hours ago", diff];
-    } else /*if (timeInterval < 2592000)*/ {
-    	int diff = round(timeInterval / 60 / 60 / 24);
-    	return[NSString stringWithFormat:@"%d days ago", diff];
-    } /*else {
-    	return @"never";
-    }*/
-    
 }
 
 - (NSString *)getTimeString:(NSNumber *)timeNumber
@@ -202,7 +191,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return self._postsList.count;
+    return self.postsList.count;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -222,7 +211,7 @@
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     }
 
-    PFObject *object = (PFObject *)[self._postsList objectAtIndex:indexPath.row];
+    PFObject *object = (PFObject *)[self.postsList objectAtIndex:indexPath.row];
     
     NSString *imageName = [object objectForKey:@"image_source1"];
     if ([imageName length] > 0 && ![imageName isEqualToString:@"NULL"]) {
@@ -245,7 +234,7 @@
     
     cell.titleTextLabel.text = [object objectForKey:@"name"];
     cell.detailsTextLabel.text = [self getDetailsText:[object objectForKey:@"body"]];
-    cell.intervalTextLabel.text = [self getLastUpdateTimeInterval:[object objectForKey:@"time_posted"]];
+    cell.intervalTextLabel.text = [SUMCommon getDurationFromNow:[object objectForKey:@"time_posted"]];
     
     NSString *str = [self getTimeString:[object objectForKey:@"time_posted"]];
     str = [str stringByAppendingString:@" * Stanford, CA"];
@@ -298,7 +287,7 @@
     PFObject *object = _postsList[indexPath.row];
     self.detailViewController.detailItem = object;
     self.detailViewController.currentIndex = indexPath.row;
-    self.detailViewController.currentPostsArray = self._postsList;
+    self.detailViewController.currentPostsArray = self.postsList;
     [self.navigationController pushViewController:self.detailViewController animated:YES];
 }
 
