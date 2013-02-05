@@ -80,7 +80,7 @@
     [self.filterDictionary setObject:category forKey:@"category"];
     [self.filterDictionary setObject:subcategory forKey:@"subcategory"];
     
-    [self browseAll:NULL];
+//    [self browseAll:NULL];
 }
 
 @end
