@@ -67,9 +67,13 @@
     return [subCategory objectForKey:@"name"];
 }
 
++ (NSString*)getSubcategoryStringFrom:(PFObject*)subcategory {
+    return [subcategory objectForKey:@"name"];
+}
+
 + (NSString*)getDurationFromNow:(NSNumber*)timePosted {
     NSDate *convertedDate = [NSDate dateWithTimeIntervalSince1970:[timePosted doubleValue]];
-    NSLog(@"%@", convertedDate);
+//    NSLog(@"%@", convertedDate);
     
     double timeInterval = [convertedDate timeIntervalSinceDate:[NSDate date]];
     

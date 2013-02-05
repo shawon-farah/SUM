@@ -17,6 +17,7 @@
 + (PFObject*)getSubcategory:(NSString*)subcategoryId;
 + (NSString*)getCategoryString:(NSString*)categoryId;
 + (NSString*)getSubcategoryString:(NSString*)subcategoryId;
++ (NSString*)getSubcategoryStringFrom:(PFObject*)subcategory;
 + (NSString*)getDurationFromNow:(NSNumber*)timePosted;
 + (NSString *)getTimeString:(NSNumber *)timeNumber;
 

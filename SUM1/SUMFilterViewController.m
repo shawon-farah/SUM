@@ -79,6 +79,8 @@
     [self.categorySelectionButton setTitle:[NSString stringWithFormat:@"%@, %@", [subcategory objectForKey:@"name"], [category objectForKey:@"short_name"]] forState:UIControlStateNormal];
     [self.filterDictionary setObject:category forKey:@"category"];
     [self.filterDictionary setObject:subcategory forKey:@"subcategory"];
+    
+    [self browseAll:NULL];
 }
 
 @end

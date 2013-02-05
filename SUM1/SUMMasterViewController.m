@@ -101,25 +101,26 @@
     /*  if wanna run filter on parse and fetch filtered data from parse 
      *  this will run the filter on whole parse db will get the most recent 100 filtered posts
      */
-    MBProgressHUD *hud = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
-    [self.navigationController.view addSubview:hud];
-    
-    hud.delegate = self;
-    hud.labelText = @"Loading";
-    [hud show:YES];
-    
+//    MBProgressHUD *hud = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
+//    [self.navigationController.view addSubview:hud];
+//    
+//    hud.delegate = self;
+//    hud.labelText = @"Loading";
+//    [hud show:YES];
+    NSString *titleText = [SUMCommon getSubcategoryStringFrom:[self.filterDictionary objectForKey:@"subcategory"]];
+    self.title = NSLocalizedString(titleText, @"Filter");
     [SUMCommon getPosts:self withFilter:self.filterDictionary];
     
 }
 
 - (void)loadPostData
 {
-    MBProgressHUD *hud = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
-    [self.navigationController.view addSubview:hud];
-    
-    hud.delegate = self;
-    hud.labelText = @"Loading";
-    [hud show:YES];
+//    MBProgressHUD *hud = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
+//    [self.navigationController.view addSubview:hud];
+//    
+//    hud.delegate = self;
+//    hud.labelText = @"Loading";
+//    [hud show:YES];
     
     PFQuery *query = [PFQuery queryWithClassName:@"testsupostimport"];
     [query orderByDescending:@"time_posted"];
@@ -138,7 +139,7 @@
             [alertView show];
             [alertView release];
         }
-        [MBProgressHUD hideHUDForView:self.navigationController.view animated:YES];
+//        [MBProgressHUD hideHUDForView:self.navigationController.view animated:YES];
     }];
 }
 
