@@ -8,10 +8,11 @@
 
 #import <UIKit/UIKit.h>
 #import "MBProgressHUD.h"
+#import "PullToRefreshView.h"
 
 @class SUMDetailViewController;
 
-@interface SUMMasterViewController : UITableViewController<MBProgressHUDDelegate>
+@interface SUMMasterViewController : UITableViewController<MBProgressHUDDelegate, PullToRefreshViewDelegate>
 {
     UITableViewCell *nibLoadedTableCell;
 }

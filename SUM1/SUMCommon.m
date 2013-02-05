@@ -12,7 +12,7 @@
 
 @implementation SUMCommon
 
-+ (void)getPosts:(SUMMasterViewController*)view withFilter:(NSMutableDictionary*)filterDict
++ (void)getPosts:(SUMMasterViewController*)view withFilter:(NSMutableDictionary*)filterDict withRefreshView:(id)refreshView
 {
     PFObject *category = [filterDict objectForKey:@"category"];
     PFObject *subcategory = [filterDict objectForKey:@"subcategory"];
@@ -35,7 +35,8 @@
             [alertView show];
             [alertView release];
         }
-        [MBProgressHUD hideHUDForView:view.navigationController.view animated:YES];
+//        [MBProgressHUD hideHUDForView:view.navigationController.view animated:YES];
+        [refreshView finishedLoading];
     }];
 }
 

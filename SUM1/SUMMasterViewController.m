@@ -26,6 +26,9 @@
 @end
 
 @implementation SUMMasterViewController
+{
+    PullToRefreshView *pull;
+}
 
 @synthesize nibLoadedTableCell;
 
@@ -54,15 +57,33 @@
         UIBarButtonItem *buttonItem = [[UIBarButtonItem alloc] initWithTitle:@"Filter" style:UIBarButtonItemStyleBordered target:self action:@selector(filterTapped:)];
         self.navigationItem.rightBarButtonItem = buttonItem;
     }
-}
-
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
+    
+    pull = [[PullToRefreshView alloc] initWithScrollView:(UIScrollView*)self.tableView];
+    [pull setDelegate:self];
+    [self.tableView addSubview:pull];
+    
     if (self.filterDictionary) {
         [self filterPosts];
-    } else
+    } else {
+        self.tableView.contentOffset = CGPointMake(0, -65);
+        [pull setState:PullToRefreshViewStateLoading];
         [self loadPostData];
+    }
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(foregroundRefresh:)
+                                                 name:UIApplicationWillEnterForegroundNotification
+                                               object:nil];
+}
+
+-(void)foregroundRefresh:(NSNotification *)notification
+{
+    self.tableView.contentOffset = CGPointMake(0, -65);
+    [pull setState:PullToRefreshViewStateLoading];
+    if (self.filterDictionary)
+        [self performSelectorInBackground:@selector(filterPosts) withObject:nil];
+    else
+        [self performSelectorInBackground:@selector(loadPostData) withObject:nil];
 }
 
 - (void)didReceiveMemoryWarning
@@ -86,6 +107,8 @@
 - (void)filterPosts
 {
     NSLog(@"%@, %@, %@", [self.filterDictionary objectForKey:@"searchText"], [self.filterDictionary objectForKey:@"category"], [self.filterDictionary objectForKey:@"subcategory"]);
+    self.tableView.contentOffset = CGPointMake(0, -65);
+    [pull setState:PullToRefreshViewStateLoading];
     /*  if wanna run filter on last fetched posts from parse
      *  this operation will run the filter on last fetched 100 posts 
      */
@@ -109,7 +132,7 @@
 //    [hud show:YES];
     NSString *titleText = [SUMCommon getSubcategoryStringFrom:[self.filterDictionary objectForKey:@"subcategory"]];
     self.title = NSLocalizedString(titleText, @"Filter");
-    [SUMCommon getPosts:self withFilter:self.filterDictionary];
+    [SUMCommon getPosts:self withFilter:self.filterDictionary withRefreshView:pull];
     
 }
 
@@ -140,6 +163,7 @@
             [alertView release];
         }
 //        [MBProgressHUD hideHUDForView:self.navigationController.view animated:YES];
+        [pull finishedLoading];
     }];
 }
 
@@ -299,6 +323,16 @@
 	// Remove HUD from screen when the HUD was hidded
 	[hud removeFromSuperview];
 	[hud release];
+}
+
+#pragma mark -
+#pragma mark PullToRefreshViewDelegate methods
+
+- (void)pullToRefreshViewShouldRefresh:(PullToRefreshView *)view {
+    if (self.filterDictionary) 
+        [self performSelectorInBackground:@selector(filterPosts) withObject:nil];
+    else
+        [self performSelectorInBackground:@selector(loadPostData) withObject:nil];
 }
 
 @end

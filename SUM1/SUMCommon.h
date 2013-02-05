@@ -9,10 +9,11 @@
 #import <Foundation/Foundation.h>
 #import <Parse/Parse.h>
 #import "SUMMasterViewController.h"
+#import "PullToRefreshView.h"
 
 @interface SUMCommon : NSObject
 
-+ (void)getPosts:(SUMMasterViewController*)view withFilter:(NSMutableDictionary*)filterDict;
++ (void)getPosts:(SUMMasterViewController*)view withFilter:(NSMutableDictionary*)filterDict withRefreshView:(id)refreshView;
 + (PFObject*)getCategory:(NSString*)categoryId;
 + (PFObject*)getSubcategory:(NSString*)subcategoryId;
 + (NSString*)getCategoryString:(NSString*)categoryId;
