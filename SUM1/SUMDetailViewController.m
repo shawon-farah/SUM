@@ -179,6 +179,7 @@
     message.fromEmail = @"noreply@supost.com";
     message.toEmail = [self.detailItem objectForKey:@"email"]; /*@"abdullah.shawon@gmail.com";*/
     message.bccEmail = @"supost.com@gmail.com";
+    message.replyTo = fromEmail;
     message.subject = [NSString stringWithFormat:@"SUpost - %@ response: %@", fromEmail, postTitle];
     
     message.delegate = self;

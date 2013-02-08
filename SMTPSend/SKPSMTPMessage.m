@@ -58,8 +58,7 @@ NSString *kSKPSMTPPartContentTransferEncodingKey = @"kSKPSMTPPartContentTransfer
 
 @implementation SKPSMTPMessage
 
-@synthesize login, pass, relayHost, relayPorts, subject, fromEmail, toEmail, parts, requiresAuth, inputString, wantsSecure, \
-            delegate, connectTimer, connectTimeout, watchdogTimer, validateSSLChain;
+@synthesize login, pass, relayHost, relayPorts, subject, fromEmail, replyTo, toEmail, parts, requiresAuth, inputString, wantsSecure, delegate, connectTimer, connectTimeout, watchdogTimer, validateSSLChain;
 @synthesize ccEmail;
 @synthesize bccEmail;
 
@@ -96,6 +95,7 @@ NSString *kSKPSMTPPartContentTransferEncodingKey = @"kSKPSMTPPartContentTransfer
     self.relayPorts = nil;
     self.subject = nil;
     self.fromEmail = nil;
+    self.replyTo = nil;
     self.toEmail = nil;
 	self.ccEmail = nil;
 	self.bccEmail = nil;
@@ -121,6 +121,7 @@ NSString *kSKPSMTPPartContentTransferEncodingKey = @"kSKPSMTPPartContentTransfer
     SKPSMTPMessage *smtpMessageCopy = [[[self class] allocWithZone:zone] init];
     smtpMessageCopy.delegate = self.delegate;
     smtpMessageCopy.fromEmail = self.fromEmail;
+    smtpMessageCopy.replyTo = self.replyTo;
     smtpMessageCopy.login = self.login;
     smtpMessageCopy.parts = [[self.parts copy] autorelease];
     smtpMessageCopy.pass = self.pass;
@@ -462,6 +463,7 @@ NSString *kSKPSMTPPartContentTransferEncodingKey = @"kSKPSMTPPartContentTransfer
                             sendState = kSKPSMTPWaitingFromReply;
                             
                             NSString *mailFrom = [NSString stringWithFormat:@"MAIL FROM:<%@>\r\n", fromEmail];
+                            mailFrom = [mailFrom stringByAppendingFormat:@"Reply-To:<%@>\r\n", replyTo];
                             NSLog(@"C: %@", mailFrom);
                             if (CFWriteStreamWriteFully((CFWriteStreamRef)outputStream, (const uint8_t *)[mailFrom UTF8String], [mailFrom lengthOfBytesUsingEncoding:NSUTF8StringEncoding]) < 0)
                             {
@@ -764,6 +766,7 @@ NSString *kSKPSMTPPartContentTransferEncodingKey = @"kSKPSMTPPartContentTransfer
     [uuid release];
     
     [message appendFormat:@"From:%@\r\n", fromEmail];
+    [message appendFormat:@"Reply-To:%@\r\n", replyTo];
 	
     
 	if ((self.toEmail != nil) && (![self.toEmail isEqualToString:@""])) 
