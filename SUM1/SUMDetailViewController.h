@@ -42,6 +42,7 @@
     IBOutlet UITextView *details;
     
     IBOutlet UIScrollView *scrollView;
+    IBOutlet UIToolbar *breadcrumb;
 }
 
 @property (strong, nonatomic) PFObject *detailItem;

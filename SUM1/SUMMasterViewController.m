@@ -43,6 +43,8 @@
 							
 - (void)dealloc
 {
+    [_tableView release];
+    [_breadcrumb release];
     [_detailViewController release];
     [_postsList release];
     [super dealloc];
@@ -76,6 +78,13 @@
                                                object:nil];
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    [self.breadcrumb setItems:[SUMCommon getBreadcrumbItemsFor:self]];
+}
+
 -(void)foregroundRefresh:(NSNotification *)notification
 {
     self.tableView.contentOffset = CGPointMake(0, -65);
@@ -90,6 +99,15 @@
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void)gotoView:(id)sender
+{
+    UIButton *button = (UIButton*)sender;
+//    UIBarButtonItem *button = (UIBarButtonItem*)sender;
+    NSArray *viewControllers = self.navigationController.viewControllers;
+    
+    [self.navigationController popToViewController:[viewControllers objectAtIndex:button.tag] animated:YES];
 }
 
 - (IBAction)filterTapped:(id)sender

@@ -33,7 +33,56 @@
     [spinner3 release];
     [spinner4 release];
     [details release];
+    [breadcrumb release];
     [super dealloc];
+}
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+	// Do any additional setup after loading the view, typically from a nib.
+    
+    //    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Reply" style:UIBarButtonSystemItemAction target:self action:@selector(replyTapped:)];
+    
+    NSMutableArray *buttons = [[NSMutableArray alloc] init];
+    UIButton *button;
+    UIBarButtonItem *buttonItem;
+    
+    button = [UIButton buttonWithType:UIButtonTypeCustom];
+    button.frame = CGRectMake(0, 0, 24, 34);
+    [button setImage:[UIImage imageNamed:@"next.png"] forState:UIControlStateNormal];
+    [button addTarget:self action:@selector(nextPost:) forControlEvents:UIControlEventTouchUpInside];
+    buttonItem = [[[UIBarButtonItem alloc] initWithCustomView:button] autorelease];
+    [buttons addObject:buttonItem];
+    
+    button = [UIButton buttonWithType:UIButtonTypeCustom];
+    button.frame = CGRectMake(24, 0, 24, 34);
+    [button setImage:[UIImage imageNamed:@"previous.png"] forState:UIControlStateNormal];
+    [button addTarget:self action:@selector(previousPost:) forControlEvents:UIControlEventTouchUpInside];
+    buttonItem = [[[UIBarButtonItem alloc] initWithCustomView:button] autorelease];
+    [buttons addObject:buttonItem];
+    //    [button release];
+    //    [buttonItem release];
+    
+    self.navigationItem.rightBarButtonItems = buttons;
+    //    [buttons release];
+    [self setButtonPermission];
+    [self configureView];
+}
+
+- (void)didReceiveMemoryWarning
+{
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+{
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    if (self) {
+        self.title = NSLocalizedString(@"Stanford, CA", @"Detail");
+    }
+    return self;
 }
 
 #pragma mark - Managing the detail item
@@ -49,12 +98,22 @@
     }
 }
 
+- (void)gotoView:(id)sender
+{
+    UIButton *button = (UIButton*)sender;
+    //    UIBarButtonItem *button = (UIBarButtonItem*)sender;
+    NSArray *viewControllers = self.navigationController.viewControllers;
+    
+    [self.navigationController popToViewController:[viewControllers objectAtIndex:button.tag] animated:YES];
+}
+
 - (void)configureView
 {
     // Update the user interface for the detail item.
 
     if (self.detailItem) {
         self.title = NSLocalizedString([self.detailItem objectForKey:@"name"], @"Details");
+        [breadcrumb setItems:[SUMCommon getBreadcrumbItemsFor:self]];
         name.text = [self.detailItem objectForKey:@"name"];
         
         NSNumber *timeNumber = [self.detailItem objectForKey:@"time_posted"];
@@ -356,11 +415,9 @@
 - (void) setButtonPermission
 {
     NSArray *buttons = self.navigationItem.rightBarButtonItems;
-    UIBarButtonItem *buttonItem;
     if (self.currentIndex <= 0) {
-        buttonItem = [buttons objectAtIndex:1];
-        [buttonItem setEnabled:false];
         [(UIBarButtonItem*)[buttons objectAtIndex:0] setEnabled:YES];
+        [(UIBarButtonItem*)[buttons objectAtIndex:1] setEnabled:NO];
     } else if (self.currentIndex >= [self.currentPostsArray count]) {
         [(UIBarButtonItem*)[buttons objectAtIndex:0] setEnabled:NO];
         [(UIBarButtonItem*)[buttons objectAtIndex:1] setEnabled:YES];
@@ -368,54 +425,6 @@
         [(UIBarButtonItem*)[buttons objectAtIndex:0] setEnabled:YES];
         [(UIBarButtonItem*)[buttons objectAtIndex:1] setEnabled:YES];
     }
-}
-
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-	// Do any additional setup after loading the view, typically from a nib.
-    
-//    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Reply" style:UIBarButtonSystemItemAction target:self action:@selector(replyTapped:)];
-    
-    NSMutableArray *buttons = [[NSMutableArray alloc] init];
-    UIButton *button;
-    UIBarButtonItem *buttonItem;
-    
-    button = [UIButton buttonWithType:UIButtonTypeCustom];
-    button.frame = CGRectMake(0, 0, 24, 34);
-    [button setImage:[UIImage imageNamed:@"down_arrow.png"] forState:UIControlStateNormal];
-    [button addTarget:self action:@selector(nextPost:) forControlEvents:UIControlEventTouchUpInside];
-    buttonItem = [[[UIBarButtonItem alloc] initWithCustomView:button] autorelease];
-    [buttons addObject:buttonItem];
-    
-    button = [UIButton buttonWithType:UIButtonTypeCustom];
-    button.frame = CGRectMake(24, 0, 24, 34);
-    [button setImage:[UIImage imageNamed:@"up_arrow.png"] forState:UIControlStateNormal];
-    [button addTarget:self action:@selector(previousPost:) forControlEvents:UIControlEventTouchUpInside];
-    buttonItem = [[[UIBarButtonItem alloc] initWithCustomView:button] autorelease];
-    [buttons addObject:buttonItem];
-//    [button release];
-//    [buttonItem release];
-    
-    self.navigationItem.rightBarButtonItems = buttons;
-//    [buttons release];
-    [self setButtonPermission];
-    [self configureView];
-}
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        self.title = NSLocalizedString(@"Stanford, CA", @"Detail");
-    }
-    return self;
 }
 
 #pragma mark -

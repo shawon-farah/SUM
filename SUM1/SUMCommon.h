@@ -17,9 +17,11 @@
 + (PFObject*)getCategory:(NSString*)categoryId;
 + (PFObject*)getSubcategory:(NSString*)subcategoryId;
 + (NSString*)getCategoryString:(NSString*)categoryId;
++ (NSString*)getCategoryStringFrom:(PFObject*)category;
 + (NSString*)getSubcategoryString:(NSString*)subcategoryId;
 + (NSString*)getSubcategoryStringFrom:(PFObject*)subcategory;
 + (NSString*)getDurationFromNow:(NSNumber*)timePosted;
 + (NSString *)getTimeString:(NSNumber *)timeNumber;
++ (NSMutableArray*)getBreadcrumbItemsFor:(UIViewController*)viewController;
 
 @end

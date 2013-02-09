@@ -12,10 +12,13 @@
 
 @class SUMDetailViewController;
 
-@interface SUMMasterViewController : UITableViewController<MBProgressHUDDelegate, PullToRefreshViewDelegate>
+@interface SUMMasterViewController : UIViewController<UITableViewDataSource, UITableViewDelegate, MBProgressHUDDelegate, PullToRefreshViewDelegate>
 {
     UITableViewCell *nibLoadedTableCell;
 }
+
+@property (strong, nonatomic) IBOutlet UITableView *tableView;
+@property (strong, nonatomic) IBOutlet UIToolbar *breadcrumb;
 
 @property (nonatomic, retain) IBOutlet UITableViewCell *nibLoadedTableCell;
 

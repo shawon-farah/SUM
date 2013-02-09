@@ -9,6 +9,7 @@
 #import "SUMCommon.h"
 #import "SUMAppDelegate.h"
 #import "SUMMasterViewController.h"
+#import "SUMFilterViewController.h"
 
 @implementation SUMCommon
 
@@ -62,6 +63,10 @@
     return [category objectForKey:@"short_name"];
 }
 
++ (NSString *)getCategoryStringFrom:(PFObject *)category {
+    return [category objectForKey:@"short_name"];
+}
+
 + (NSString*)getSubcategoryString:(NSString*)subcategoryId {
     PFObject *subCategory = [self getSubcategory:subcategoryId];
     
@@ -103,6 +108,105 @@
     [dtf setDateFormat:@"EEE, MMM dd, yyyy hh:mm aa"];
     
     return [dtf stringFromDate:date];
+}
+
++ (UIBarButtonItem *)getBreadcrumbLabelWith:(NSString*)string constrainedToSize:(CGSize)maxSize
+{
+    UILabel *label = [[[UILabel alloc] init] autorelease];
+    label.frame = CGRectMake(0, 0, maxSize.width, maxSize.height);
+    label.backgroundColor = [UIColor clearColor];
+    label.numberOfLines = 2;
+    label.lineBreakMode = UILineBreakModeWordWrap;
+    label.font = [UIFont systemFontOfSize:10];
+    label.text = string;
+    CGSize size = [string sizeWithFont:label.font constrainedToSize:label.frame.size lineBreakMode:label.lineBreakMode];
+    label.frame = CGRectMake(0, 0, size.width, maxSize.height);
+    
+    return [[UIBarButtonItem alloc] initWithCustomView:label];
+}
+
++ (UIBarButtonItem *)getBreadcrumbButtonWith:(NSString*)string tag:(int)i delegate:(UIViewController*)viewController
+{
+    CGSize maxSize = CGSizeMake(70, 40);
+    string = [NSString stringWithFormat:@" %@ ", string];
+    CGSize size = [string sizeWithFont:[UIFont systemFontOfSize:10] constrainedToSize:maxSize lineBreakMode:NSLineBreakByWordWrapping];
+    UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+    button.frame = CGRectMake(0, 0, size.width, 40);
+    button.tag = i;
+//    button.layer.borderColor = [c];
+    button.layer.borderWidth = 1.0;
+    button.layer.cornerRadius = 5.0;
+    [button addTarget:viewController action:@selector(gotoView:) forControlEvents:UIControlEventTouchUpInside];
+    [button setTitle:string forState:UIControlStateNormal];
+    button.titleLabel.font = [UIFont systemFontOfSize:10];
+    button.titleLabel.numberOfLines = 2;
+    button.titleLabel.lineBreakMode = NSLineBreakByWordWrapping;
+    UIBarButtonItem *buttonItem = [[UIBarButtonItem alloc] initWithCustomView:button];
+    [buttonItem setStyle:UIBarButtonItemStyleDone];
+//    UIBarButtonItem *buttonItem = [[UIBarButtonItem alloc] initWithTitle:aViewController.title style:UIBarButtonItemStyleBordered target:viewController action:@selector(gotoView:)];
+//    buttonItem.tag = i;
+    
+    return buttonItem;
+}
+
++ (NSMutableArray *)getBreadcrumbItemsFor:(UIViewController *)viewController
+{
+    NSMutableArray *items = [[NSMutableArray alloc] init];
+    NSArray *viewControllers = viewController.navigationController.viewControllers;
+    CGSize size = CGSizeMake(60, 40);
+    
+    if (viewControllers.count == 1) {
+        [items addObject:[SUMCommon getBreadcrumbLabelWith:viewController.title constrainedToSize:size]];
+    }
+    else
+    {
+        int count = viewControllers.count;
+        for (int i = 0; i < count; i++) {
+            UIViewController *aViewController = [viewControllers objectAtIndex:i];
+            
+            if (![aViewController isKindOfClass:[SUMFilterViewController class]])
+            {
+                if ([aViewController isKindOfClass:[SUMMasterViewController class]])
+                {
+                    SUMMasterViewController *masterView = (SUMMasterViewController*)aViewController;
+                    if (masterView.filterDictionary != NULL)
+                    {
+                        if (aViewController == viewController)
+                        {
+                            NSString *str = [SUMCommon getCategoryStringFrom:[masterView.filterDictionary objectForKey:@"category"]];
+                            str = [str stringByAppendingFormat:@" > %@", [SUMCommon getSubcategoryStringFrom:[masterView.filterDictionary objectForKey:@"subcategory"]]];
+                            size = CGSizeMake(200, 40);
+                            [items addObject:[SUMCommon getBreadcrumbLabelWith:str constrainedToSize:size]];
+                        }
+                        else
+                        {
+                            NSString *str = [NSString stringWithFormat:@"%@ >", [SUMCommon getCategoryStringFrom:[masterView.filterDictionary objectForKey:@"category"]]];
+                            [items addObject:[SUMCommon getBreadcrumbLabelWith:str constrainedToSize:size]];
+                            str = [SUMCommon getSubcategoryStringFrom:[masterView.filterDictionary objectForKey:@"subcategory"]];
+                            [items addObject:[SUMCommon getBreadcrumbButtonWith:str tag:i delegate:viewController]];
+                        }
+                    }
+                    else
+                    {
+                        [items addObject:[SUMCommon getBreadcrumbButtonWith:aViewController.title tag:i delegate:viewController]];
+                    }
+                }
+                else
+                {
+                    if (count < 3) {
+                        size = CGSizeMake(210, 40);
+                    }
+                    [items addObject:[SUMCommon getBreadcrumbLabelWith:aViewController.title constrainedToSize:size]];
+                }
+                
+                if (i < count-1) {
+                    [items addObject:[SUMCommon getBreadcrumbLabelWith:@">" constrainedToSize:size]];
+                }
+            }
+        }
+    }
+    
+    return items;
 }
 
 @end
