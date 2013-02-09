@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <Parse/Parse.h>
 #import "SUMMasterViewController.h"
+#import "SUMDetailViewController.h"
 #import "PullToRefreshView.h"
 
 @interface SUMCommon : NSObject

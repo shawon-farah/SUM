@@ -71,7 +71,7 @@
         [pull setState:PullToRefreshViewStateLoading];
         [self loadPostData];
     }
-    
+    appDelegate = [UIApplication sharedApplication].delegate;
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(foregroundRefresh:)
                                                  name:UIApplicationWillEnterForegroundNotification
@@ -85,7 +85,7 @@
     [self.breadcrumb setItems:[SUMCommon getBreadcrumbItemsFor:self]];
 }
 
--(void)foregroundRefresh:(NSNotification *)notification
+- (void)foregroundRefresh:(NSNotification *)notification
 {
     self.tableView.contentOffset = CGPointMake(0, -65);
     [pull setState:PullToRefreshViewStateLoading];
@@ -113,13 +113,7 @@
 - (IBAction)filterTapped:(id)sender
 {
     SUMFilterViewController *viewController = [[SUMFilterViewController alloc] initWithNibName:@"SUMFilterViewController" bundle:nil];
-//    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:viewController];
-//    [self.navigationController presentModalViewController:navigationController animated:YES];
-    [UIView beginAnimations:@"transition" context:nil];
-    [UIView setAnimationDuration:0.5];
-    [UIView setAnimationTransition:UIViewAnimationTransitionFlipFromLeft forView:self.navigationController.view cache:NO];
-    [self.navigationController pushViewController:viewController animated:NO];
-    [UIView commitAnimations];
+    [appDelegate pushViewControllerWithFlipTransition:viewController];
 }
 
 - (void)filterPosts
@@ -150,19 +144,13 @@
 //    [hud show:YES];
     NSString *titleText = [SUMCommon getSubcategoryStringFrom:[self.filterDictionary objectForKey:@"subcategory"]];
     self.title = NSLocalizedString(titleText, @"Filter");
+    [self.breadcrumb setItems:[SUMCommon getBreadcrumbItemsFor:self]];
     [SUMCommon getPosts:self withFilter:self.filterDictionary withRefreshView:pull];
     
 }
 
 - (void)loadPostData
 {
-//    MBProgressHUD *hud = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
-//    [self.navigationController.view addSubview:hud];
-//    
-//    hud.delegate = self;
-//    hud.labelText = @"Loading";
-//    [hud show:YES];
-    
     PFQuery *query = [PFQuery queryWithClassName:@"testsupostimport"];
     [query orderByDescending:@"time_posted"];
     [query whereKey:@"status" equalTo:[NSNumber numberWithInt:1]];
@@ -171,7 +159,6 @@
         if (!error) {
             self.postsList = [[NSMutableArray alloc] initWithArray:objects];
             [self.tableView reloadData];
-            SUMAppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
             appDelegate.postsList = self.postsList;
         } else {
             // Log details of the failure
@@ -180,7 +167,6 @@
             [alertView show];
             [alertView release];
         }
-//        [MBProgressHUD hideHUDForView:self.navigationController.view animated:YES];
         [pull finishedLoading];
     }];
 }
@@ -196,7 +182,6 @@
 
 - (NSString *)getSubcategoryName:(NSNumber*)subcategoryId
 {
-    SUMAppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"subcategory_id == %@", subcategoryId];
     NSArray *array = [appDelegate.subcategoryList filteredArrayUsingPredicate:predicate];
     PFObject *object = (PFObject *)[array objectAtIndex:0];
@@ -206,7 +191,6 @@
 
 - (NSString *)getCategoryName:(NSNumber*)categoryId
 {
-    SUMAppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"category_id == %@", categoryId];
     NSArray *array = [appDelegate.categoryList filteredArrayUsingPredicate:predicate];
     PFObject *object = (PFObject *)[array objectAtIndex:0];
@@ -269,6 +253,7 @@
             dispatch_async(dispatch_get_main_queue(), ^{
                 // WARNING: is the cell still using the same data by this point??
                 cell.imageView.image = [UIImage imageWithData: data];
+                cell.imageView.contentMode = UIViewContentModeScaleAspectFit;
                 [cell.spinner stopAnimating];
                 [cell.spinner removeFromSuperview];
             });
@@ -332,8 +317,7 @@
     self.detailViewController.detailItem = object;
     self.detailViewController.currentIndex = indexPath.row;
     self.detailViewController.currentPostsArray = self.postsList;
-    [self.navigationController pushViewController:self.detailViewController animated:YES];
-    
+    [appDelegate pushViewControllerAnimated:self.detailViewController];
     [tableView deselectRowAtIndexPath:indexPath animated:NO];
 }
 

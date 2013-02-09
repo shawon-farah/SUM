@@ -18,4 +18,9 @@
 @property (strong, nonatomic) NSMutableArray *subcategoryList;
 @property (strong, nonatomic) NSMutableArray *postsList;
 
+- (void)pushViewControllerAnimated:(UIViewController*)viewController;
+- (void)pushViewControllerWithFlipTransition:(UIViewController*)viewController;
+- (void)popViewControllerAnimated:(UIViewController*)viewController;
+- (void)gotoViewController:(id)sender;
+
 @end

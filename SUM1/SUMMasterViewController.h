@@ -9,12 +9,15 @@
 #import <UIKit/UIKit.h>
 #import "MBProgressHUD.h"
 #import "PullToRefreshView.h"
+#import "SUMAppDelegate.h"
 
 @class SUMDetailViewController;
 
 @interface SUMMasterViewController : UIViewController<UITableViewDataSource, UITableViewDelegate, MBProgressHUDDelegate, PullToRefreshViewDelegate>
 {
     UITableViewCell *nibLoadedTableCell;
+    
+    SUMAppDelegate *appDelegate;
 }
 
 @property (strong, nonatomic) IBOutlet UITableView *tableView;
@@ -27,5 +30,7 @@
 @property (strong, nonatomic) NSMutableDictionary *filterDictionary;
 
 @property (strong, nonatomic) SUMDetailViewController *detailViewController;
+
+- (void)foregroundRefresh:(NSNotification *)notification;
 
 @end

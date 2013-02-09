@@ -72,16 +72,16 @@
 
 #pragma mark - Managing the detail item
 
-- (void)setDetailItem:(id)newDetailItem
-{
-    if (_detailItem != newDetailItem) {
-        [_detailItem release];
-        _detailItem = [newDetailItem retain];
-
-        // Update the view.
-        [self configureView];
-    }
-}
+//- (void)setDetailItem:(id)newDetailItem
+//{
+//    if (_detailItem != newDetailItem) {
+//        [_detailItem release];
+//        _detailItem = [newDetailItem retain];
+//
+//        // Update the view.
+//        [self configureView];
+//    }
+//}
 
 - (void)gotoView:(id)sender
 {
@@ -123,6 +123,7 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             // WARNING: is the cell still using the same data by this point??
             imageView.image = [UIImage imageWithData: data];
+            imageView.contentMode = UIViewContentModeScaleAspectFit;
             [spinner stopAnimating];
             [spinner removeFromSuperview];
         });

@@ -9,6 +9,8 @@
 #import "SUMAppDelegate.h"
 #import <Parse/Parse.h>
 #import "SUMMasterViewController.h"
+#import "SUMDetailViewController.h"
+#import "SUMCommon.h"
 
 @implementation SUMAppDelegate
 
@@ -80,6 +82,109 @@
 - (void)applicationWillTerminate:(UIApplication *)application
 {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+}
+
+- (void)pushViewControllerAnimated:(UIViewController *)viewController
+{
+    [self.navigationController pushViewController:viewController animated:YES];
+}
+
+- (void)pushViewControllerWithFlipTransition:(UIViewController *)viewController
+{
+    [UIView beginAnimations:@"transition" context:nil];
+    [UIView setAnimationDuration:0.5];
+    [UIView setAnimationTransition:UIViewAnimationTransitionFlipFromLeft forView:self.navigationController.view cache:NO];
+    [self.navigationController pushViewController:viewController animated:NO];
+    [UIView commitAnimations];
+}
+
+- (void)popViewControllerAnimated:(UIViewController *)viewController
+{
+    [self.navigationController popToViewController:viewController animated:YES];
+}
+
+- (void)gotoViewController:(id)sender
+{
+    UIButton *button = (UIButton*)sender;
+    int tag = button.tag;
+    NSLog(@"Div:%d, Mod:%d", tag/10, tag%10);
+    switch (tag/10) {
+        case 1:
+        {
+            switch (tag%10) {
+                case 0:
+                    [self.navigationController popToRootViewControllerAnimated:YES];
+                    break;
+                case 1:
+                {
+                    UIViewController *viewController = self.navigationController.topViewController;
+                    if ([viewController isKindOfClass:[SUMMasterViewController class]]) {
+                        SUMMasterViewController *listView = (SUMMasterViewController*)viewController;
+                        [listView.filterDictionary removeObjectForKey:@"subcategory"];
+                        [listView foregroundRefresh:nil];
+                    } else {
+                        int count = self.navigationController.viewControllers.count;
+                        SUMMasterViewController *listView = (SUMMasterViewController*)[self.navigationController.viewControllers objectAtIndex:count-2];
+                        [listView.filterDictionary removeObjectForKey:@"subcategory"];
+                        [self.navigationController popViewControllerAnimated:YES];
+                        [listView foregroundRefresh:nil];
+                    }
+                }
+                    break;
+                case 2:
+                {
+                    SUMDetailViewController *detailsView = (SUMDetailViewController*)self.navigationController.topViewController;
+                    NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
+                    [dict setObject:[SUMCommon getCategory:[detailsView.detailItem objectForKey:@"category_id"]] forKey:@"category"];
+                    [dict setObject:[SUMCommon getSubcategory:[detailsView.detailItem objectForKey:@"subcategory_id"]] forKey:@"subcategory"];
+                    
+                    int count = self.navigationController.viewControllers.count;
+                    SUMMasterViewController *listView = (SUMMasterViewController*)[self.navigationController.viewControllers objectAtIndex:count-2];
+                    listView.filterDictionary = dict;
+                    [self.navigationController popViewControllerAnimated:YES];
+                    [listView foregroundRefresh:nil];
+                }
+                    break;
+                default:
+                    break;
+            }
+        }
+            break;
+        case 2:
+        {
+            switch (tag%10) {
+                case 1:
+                {
+                    SUMDetailViewController *detailsView = (SUMDetailViewController*)self.navigationController.topViewController;
+                    NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
+                    [dict setObject:[SUMCommon getCategory:[detailsView.detailItem objectForKey:@"category_id"]] forKey:@"category"];
+                    SUMMasterViewController *listView = [[SUMMasterViewController alloc] initWithNibName:@"SUMMasterViewController" bundle:nil];
+                    listView.filterDictionary = dict;
+                    [self.navigationController popViewControllerAnimated:NO];
+                    [self pushViewControllerAnimated:listView];
+                }
+                    break;
+                case 2:
+                {
+                    SUMDetailViewController *detailsView = (SUMDetailViewController*)self.navigationController.topViewController;
+                    NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
+                    [dict setObject:[SUMCommon getCategory:[detailsView.detailItem objectForKey:@"category_id"]] forKey:@"category"];
+                    [dict setObject:[SUMCommon getSubcategory:[detailsView.detailItem objectForKey:@"subcategory_id"]] forKey:@"subcategory"];
+                    
+                    SUMMasterViewController *listView = [[SUMMasterViewController alloc] initWithNibName:@"SUMMasterViewController" bundle:nil];
+                    listView.filterDictionary = dict;
+                    [self.navigationController popViewControllerAnimated:NO];
+                    [self pushViewControllerAnimated:listView];
+                }
+                    break;
+                default:
+                    break;
+            }
+        }
+            break;
+        default:
+            break;
+    }
 }
 
 @end

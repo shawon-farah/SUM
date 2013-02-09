@@ -10,18 +10,22 @@
 #import "SUMAppDelegate.h"
 #import "SUMMasterViewController.h"
 #import "SUMFilterViewController.h"
+#import "SUMDetailViewController.h"
 
 @implementation SUMCommon
 
 + (void)getPosts:(SUMMasterViewController*)view withFilter:(NSMutableDictionary*)filterDict withRefreshView:(id)refreshView
 {
     PFObject *category = [filterDict objectForKey:@"category"];
-    PFObject *subcategory = [filterDict objectForKey:@"subcategory"];
+    PFObject *subcategory = nil;
+    if ([filterDict objectForKey:@"subcategory"])
+        subcategory = [filterDict objectForKey:@"subcategory"];
     
     PFQuery *query = [PFQuery queryWithClassName:@"testsupostimport"];
     [query orderByDescending:@"time_posted"];
     [query whereKey:@"category_id" equalTo:[category objectForKey:@"category_id"]];
-    [query whereKey:@"subcategory_id" equalTo:[subcategory objectForKey:@"subcategory_id"]];
+    if (subcategory != nil)
+        [query whereKey:@"subcategory_id" equalTo:[subcategory objectForKey:@"subcategory_id"]];
     [query whereKey:@"status" equalTo:[NSNumber numberWithInt:1]];
     query.limit = 100;
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
@@ -75,7 +79,10 @@
 }
 
 + (NSString*)getSubcategoryStringFrom:(PFObject*)subcategory {
-    return [subcategory objectForKey:@"name"];
+    if (subcategory)
+        return [subcategory objectForKey:@"name"];
+    else
+        return @"all";
 }
 
 + (NSString*)getDurationFromNow:(NSNumber*)timePosted {
@@ -128,6 +135,7 @@
 
 + (UIBarButtonItem *)getBreadcrumbButtonWith:(NSString*)string tag:(int)i delegate:(UIViewController*)viewController
 {
+    SUMAppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
     CGSize maxSize = CGSizeMake(70, 40);
     string = [NSString stringWithFormat:@" %@ ", string];
     CGSize size = [string sizeWithFont:[UIFont systemFontOfSize:10] constrainedToSize:maxSize lineBreakMode:NSLineBreakByWordWrapping];
@@ -138,7 +146,8 @@
     button.layer.borderWidth = 1.0;
     button.layer.cornerRadius = 5.0;
     button.clipsToBounds = YES;
-    [button addTarget:viewController action:@selector(gotoView:) forControlEvents:UIControlEventTouchUpInside];
+//    [button addTarget:viewController action:@selector(gotoView:) forControlEvents:UIControlEventTouchUpInside];
+    [button addTarget:appDelegate action:@selector(gotoViewController:) forControlEvents:UIControlEventTouchUpInside];
     [button setTitle:string forState:UIControlStateNormal];
     button.titleLabel.font = [UIFont systemFontOfSize:10];
     button.titleLabel.numberOfLines = 2;
@@ -163,50 +172,79 @@
     else
     {
         int count = viewControllers.count;
-        for (int i = 0; i < count; i++) {
+        for (int i=0; i < count; i++) {
             UIViewController *aViewController = [viewControllers objectAtIndex:i];
-            
-            if (![aViewController isKindOfClass:[SUMFilterViewController class]])
-            {
-                if ([aViewController isKindOfClass:[SUMMasterViewController class]])
-                {
-                    SUMMasterViewController *masterView = (SUMMasterViewController*)aViewController;
-                    if (masterView.filterDictionary != NULL)
-                    {
-                        if (aViewController == viewController)
-                        {
-                            NSString *str = [SUMCommon getCategoryStringFrom:[masterView.filterDictionary objectForKey:@"category"]];
-                            str = [str stringByAppendingFormat:@" > %@", [SUMCommon getSubcategoryStringFrom:[masterView.filterDictionary objectForKey:@"subcategory"]]];
-                            size = CGSizeMake(200, 40);
-                            [items addObject:[SUMCommon getBreadcrumbLabelWith:str constrainedToSize:size]];
-                        }
-                        else
-                        {
-                            NSString *str = [NSString stringWithFormat:@"%@ >", [SUMCommon getCategoryStringFrom:[masterView.filterDictionary objectForKey:@"category"]]];
-                            [items addObject:[SUMCommon getBreadcrumbLabelWith:str constrainedToSize:size]];
-                            str = [SUMCommon getSubcategoryStringFrom:[masterView.filterDictionary objectForKey:@"subcategory"]];
-                            [items addObject:[SUMCommon getBreadcrumbButtonWith:str tag:i delegate:viewController]];
-                        }
+            if ([aViewController isKindOfClass:[SUMMasterViewController class]]) {
+                SUMMasterViewController *listView = (SUMMasterViewController*)aViewController;
+                if (listView.filterDictionary) {
+                    if (aViewController == viewController) {
+                        [items addObject:[SUMCommon getBreadcrumbButtonWith:[SUMCommon getCategoryStringFrom:[listView.filterDictionary objectForKey:@"category"]] tag:11 delegate:aViewController]];
+                        [items addObject:[SUMCommon getBreadcrumbLabelWith:[SUMCommon getSubcategoryStringFrom:[listView.filterDictionary objectForKey:@"subcategory"]] constrainedToSize:size]];
                     }
-                    else
-                    {
-                        [items addObject:[SUMCommon getBreadcrumbButtonWith:aViewController.title tag:i delegate:viewController]];
-                    }
+                } else {
+                    [items addObject:[SUMCommon getBreadcrumbButtonWith:aViewController.title tag:10 delegate:aViewController]];
                 }
-                else
-                {
-                    if (count < 3) {
-                        size = CGSizeMake(210, 40);
-                    }
-                    [items addObject:[SUMCommon getBreadcrumbLabelWith:aViewController.title constrainedToSize:size]];
+            }
+            else if ([aViewController isKindOfClass:[SUMDetailViewController class]]) {
+                SUMDetailViewController *detailsView = (SUMDetailViewController*)aViewController;
+                if (count < 3) {
+                    [items addObject:[SUMCommon getBreadcrumbButtonWith:[SUMCommon getCategoryString:[detailsView.detailItem objectForKey:@"category_id"]] tag:21 delegate:aViewController]];
+                    [items addObject:[SUMCommon getBreadcrumbButtonWith:[SUMCommon getSubcategoryString:[detailsView.detailItem objectForKey:@"subcategory_id"]] tag:22 delegate:aViewController]];
+                } else {
+                    [items addObject:[SUMCommon getBreadcrumbButtonWith:[SUMCommon getCategoryString:[detailsView.detailItem objectForKey:@"category_id"]] tag:11 delegate:aViewController]];
+                    [items addObject:[SUMCommon getBreadcrumbButtonWith:[SUMCommon getSubcategoryString:[detailsView.detailItem objectForKey:@"subcategory_id"]] tag:12 delegate:aViewController]];
                 }
-                
-                if (i < count-1) {
-                    [items addObject:[SUMCommon getBreadcrumbLabelWith:@">" constrainedToSize:size]];
-                }
+                [items addObject:[SUMCommon getBreadcrumbLabelWith:aViewController.title constrainedToSize:size]];
             }
         }
     }
+//    else
+//    {
+//        int count = viewControllers.count;
+//        for (int i = 0; i < count; i++) {
+//            UIViewController *aViewController = [viewControllers objectAtIndex:i];
+//            
+//            if (![aViewController isKindOfClass:[SUMFilterViewController class]])
+//            {
+//                if ([aViewController isKindOfClass:[SUMMasterViewController class]])
+//                {
+//                    SUMMasterViewController *masterView = (SUMMasterViewController*)aViewController;
+//                    if (masterView.filterDictionary != NULL)
+//                    {
+//                        if (aViewController == viewController)
+//                        {
+//                            NSString *str = [SUMCommon getCategoryStringFrom:[masterView.filterDictionary objectForKey:@"category"]];
+//                            str = [str stringByAppendingFormat:@" > %@", [SUMCommon getSubcategoryStringFrom:[masterView.filterDictionary objectForKey:@"subcategory"]]];
+//                            size = CGSizeMake(200, 40);
+//                            [items addObject:[SUMCommon getBreadcrumbLabelWith:str constrainedToSize:size]];
+//                        }
+//                        else
+//                        {
+//                            NSString *str = [NSString stringWithFormat:@"%@ >", [SUMCommon getCategoryStringFrom:[masterView.filterDictionary objectForKey:@"category"]]];
+//                            [items addObject:[SUMCommon getBreadcrumbLabelWith:str constrainedToSize:size]];
+//                            str = [SUMCommon getSubcategoryStringFrom:[masterView.filterDictionary objectForKey:@"subcategory"]];
+//                            [items addObject:[SUMCommon getBreadcrumbButtonWith:str tag:i delegate:viewController]];
+//                        }
+//                    }
+//                    else
+//                    {
+//                        [items addObject:[SUMCommon getBreadcrumbButtonWith:aViewController.title tag:i delegate:viewController]];
+//                    }
+//                }
+//                else
+//                {
+//                    if ([aViewController isKindOfClass:[SUMDetailViewController class]]) {
+//                        SUMDetailViewController *detailsView = (SUMDetailViewController*)aViewController;
+//                        if (count < 3) {
+//                            [items addObject:[SUMCommon getBreadcrumbButtonWith:[SUMCommon getCategoryString:[detailsView.detailItem objectForKey:@"category_id"]] tag:-1 delegate:aViewController]];
+//                            [items addObject:[SUMCommon getBreadcrumbButtonWith:[SUMCommon getCategoryString:[detailsView.detailItem objectForKey:@"subcategory_id"]] tag:-2 delegate:aViewController]];
+//                        }
+//                    }
+//                    [items addObject:[SUMCommon getBreadcrumbLabelWith:aViewController.title constrainedToSize:size]];
+//                }
+//            }
+//        }
+//    }
     
     return items;
 }
