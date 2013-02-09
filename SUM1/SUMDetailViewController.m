@@ -448,10 +448,14 @@
 - (void) setButtonPermission
 {
     NSArray *buttons = self.navigationItem.rightBarButtonItems;
-    if (self.currentIndex <= 0) {
+    int count = self.currentPostsArray.count;
+    if (count == 1) {
+        [(UIBarButtonItem*)[buttons objectAtIndex:0] setEnabled:NO];
+        [(UIBarButtonItem*)[buttons objectAtIndex:1] setEnabled:NO];
+    } else if (self.currentIndex <= 0) {
         [(UIBarButtonItem*)[buttons objectAtIndex:0] setEnabled:YES];
         [(UIBarButtonItem*)[buttons objectAtIndex:1] setEnabled:NO];
-    } else if (self.currentIndex >= [self.currentPostsArray count]) {
+    } else if (self.currentIndex == count-1) {
         [(UIBarButtonItem*)[buttons objectAtIndex:0] setEnabled:NO];
         [(UIBarButtonItem*)[buttons objectAtIndex:1] setEnabled:YES];
     } else {

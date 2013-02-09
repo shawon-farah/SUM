@@ -216,6 +216,7 @@
 
 - (NSString *)getDetailsText:(NSString*)detailsText
 {
+    detailsText = [detailsText stringByReplacingOccurrencesOfString:@"\r" withString:@""];
     detailsText = [detailsText stringByReplacingOccurrencesOfString:@"\n" withString:@" "];
     detailsText = [detailsText stringByReplacingOccurrencesOfString:@"\\n" withString:@" "];
     detailsText = [detailsText stringByReplacingOccurrencesOfString:@"<br />" withString:@" "];
