@@ -165,7 +165,7 @@
     
     PFQuery *query = [PFQuery queryWithClassName:@"testsupostimport"];
     [query orderByDescending:@"time_posted"];
-//    [query ]
+    [query whereKey:@"status" equalTo:[NSNumber numberWithInt:1]];
     query.limit = 100;
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {

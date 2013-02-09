@@ -22,6 +22,7 @@
     [query orderByDescending:@"time_posted"];
     [query whereKey:@"category_id" equalTo:[category objectForKey:@"category_id"]];
     [query whereKey:@"subcategory_id" equalTo:[subcategory objectForKey:@"subcategory_id"]];
+    [query whereKey:@"status" equalTo:[NSNumber numberWithInt:1]];
     query.limit = 100;
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
