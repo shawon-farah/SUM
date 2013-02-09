@@ -164,6 +164,7 @@
     textView.layer.borderWidth = 1;
     textView.layer.cornerRadius = 10;
     textView.clipsToBounds = YES;
+    textView.userInteractionEnabled = false;
     contentHeight = defaultY + textView.frame.size.height;
     
     UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -251,6 +252,7 @@
     frame = textView.frame;
     frame.size.height = textView.contentSize.height;
     textView.frame = frame;
+    textView.userInteractionEnabled = false;
     contentHeight = defaultY + textView.frame.size.height;
     
     defaultY = contentHeight + 10;
