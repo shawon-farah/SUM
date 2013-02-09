@@ -23,18 +23,7 @@
 {
     [_detailItem release];
     [_currentPostsArray release];
-    [name release];
-    [interval release];
-    [timePosted release];
-    [imageView1 release];
-    [imageView2 release];
-    [imageView3 release];
-    [imageView4 release];
-    [spinner1 release];
-    [spinner2 release];
-    [spinner3 release];
-    [spinner4 release];
-    [details release];
+    [scrollView release];
     [breadcrumb release];
     [super dealloc];
 }

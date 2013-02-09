@@ -26,21 +26,6 @@
 
 @interface SUMDetailViewController : UIViewController <UIAlertViewDelegate, SKPSMTPMessageDelegate, MBProgressHUDDelegate>
 {
-    IBOutlet UILabel *name;
-    IBOutlet UILabel *interval;
-    IBOutlet UILabel *timePosted;
-    IBOutlet UITextView *attributes;
-    IBOutlet UIImageView *imageView1;
-    IBOutlet UIImageView *imageView2;
-    IBOutlet UIImageView *imageView3;
-    IBOutlet UIImageView *imageView4;
-    IBOutlet UIActivityIndicatorView *spinner1;
-    IBOutlet UIActivityIndicatorView *spinner2;
-    IBOutlet UIActivityIndicatorView *spinner3;
-    IBOutlet UIActivityIndicatorView *spinner4; 
-//    IBOutlet UIActivityIndicatorView *Spinner;
-    IBOutlet UITextView *details;
-    
     IBOutlet UIScrollView *scrollView;
     IBOutlet UIToolbar *breadcrumb;
 }
