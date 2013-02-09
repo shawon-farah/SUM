@@ -295,6 +295,16 @@
     NSNumber *postId = [self.detailItem objectForKey:@"post_id"];
     NSNumber *securityId = [self.detailItem objectForKey:@"security_id"];
     
+    NSUserDefaults *userDefault = [NSUserDefaults standardUserDefaults];
+    NSString *userMail = [userDefault objectForKey:@"UserEmail"];
+    if (userMail) {
+        if (![fromEmail isEqualToString:userMail]) {
+            [userDefault setObject:fromEmail forKey:@"UserEmail"];
+        }
+    } else
+        [userDefault setObject:fromEmail forKey:@"UserEmail"];
+    
+    
     SKPSMTPMessage *message = [self configureSMTPMessage];
     
     message.fromEmail = @"noreply@supost.com";
@@ -385,6 +395,11 @@
     [[alertView textFieldAtIndex:1] setSecureTextEntry:NO];
     [[alertView textFieldAtIndex:0] setPlaceholder:@"Your Message"];
     [[alertView textFieldAtIndex:1] setPlaceholder:@"Your Email"];
+    
+    NSUserDefaults *userDefault = [NSUserDefaults standardUserDefaults];
+    NSString *userMail = [userDefault objectForKey:@"UserEmail"];
+    if (userMail)
+        [[alertView textFieldAtIndex:1] setText:userMail];
     
     [alertView show];
 }
