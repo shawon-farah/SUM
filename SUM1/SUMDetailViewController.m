@@ -147,12 +147,26 @@
     defaultY = contentHeight + 3;
     defaultWidth = 180;
     NSNumber *timeNumber = [self.detailItem objectForKey:@"time_posted"];
-    label = [self getLabelWith:[SUMCommon getDurationFromNow:timeNumber] font:[UIFont systemFontOfSize:10] lines:1 frame:CGRectMake(defaultX, defaultY, defaultWidth, defaultHeight)];
-    [scrollView addSubview:label];
-    contentHeight = defaultY + label.frame.size.height;
+    NSString *str = [SUMCommon getDurationFromNow:timeNumber];
+    str = [str stringByAppendingFormat:@"\n%@ (%@)", [SUMCommon getSubcategoryString:[self.detailItem objectForKey:@"subcategory_id"]], [SUMCommon getCategoryString:[self.detailItem objectForKey:@"category_id"]]];
+    str = [str stringByAppendingString:@"\nLocation: Stanford, CA"];
+    str = [str stringByAppendingString:@"\nNetworks: Stanford University"];
+    str = [str stringByAppendingFormat:@"\nDate: %@", [SUMCommon getTimeString:timeNumber]];
+    UITextView *textView = [[UITextView alloc] initWithFrame:CGRectMake(11, defaultY, defaultWidth, 100)];
+    textView.text = str;
+    textView.backgroundColor = [UIColor clearColor];
+    textView.font = [UIFont systemFontOfSize:10];
+    [scrollView addSubview:textView];
+    CGRect frame = textView.frame;
+    frame.size.height = textView.contentSize.height;
+    textView.frame = frame;
+    textView.layer.borderWidth = 1;
+    textView.layer.cornerRadius = 10;
+    textView.clipsToBounds = YES;
+    contentHeight = defaultY + textView.frame.size.height;
     
     UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-    button.frame = CGRectMake(defaultX+defaultWidth+5, defaultY, scrollView.frame.size.width-(defaultX+defaultWidth+5+20), 50);
+    button.frame = CGRectMake(defaultX+defaultWidth, defaultY, scrollView.frame.size.width-(defaultX+defaultWidth+20), 50);
     button.backgroundColor = [UIColor greenColor];
     button.titleLabel.font = [UIFont boldSystemFontOfSize:16];
     [button setTitle:@"Reply" forState:UIControlStateNormal];
@@ -163,29 +177,33 @@
     [button addTarget:self action:@selector(replyTapped:) forControlEvents:UIControlEventTouchUpInside];
     [scrollView addSubview:button];
     
-    defaultY = contentHeight + 3;
-    NSString *str = [NSString stringWithFormat:@"%@ (%@)", [SUMCommon getSubcategoryString:[self.detailItem objectForKey:@"subcategory_id"]], [SUMCommon getCategoryString:[self.detailItem objectForKey:@"category_id"]]];
-    label = [self getLabelWith:str font:[UIFont systemFontOfSize:10] lines:2 frame:CGRectMake(defaultX, defaultY, defaultWidth, defaultHeight*2)];
-    [scrollView addSubview:label];
-    contentHeight = defaultY + label.frame.size.height;
+//    label = [self getLabelWith:[SUMCommon getDurationFromNow:timeNumber] font:[UIFont systemFontOfSize:10] lines:1 frame:CGRectMake(defaultX, defaultY, defaultWidth, defaultHeight)];
+//    [scrollView addSubview:label];
+//    contentHeight = defaultY + label.frame.size.height;
     
-    defaultY = contentHeight + 3;
-    str = @"Location: Stanford, CA";
-    label = [self getLabelWith:str font:[UIFont systemFontOfSize:10] lines:2 frame:CGRectMake(defaultX, defaultY, defaultWidth, defaultHeight*2)];
-    [scrollView addSubview:label];
-    contentHeight = defaultY + label.frame.size.height;
-    
-    defaultY = contentHeight + 3;
-    str = @"Networks: Stanford University";
-    label = [self getLabelWith:str font:[UIFont systemFontOfSize:10] lines:2 frame:CGRectMake(defaultX, defaultY, defaultWidth, defaultHeight*2)];
-    [scrollView addSubview:label];
-    contentHeight = defaultY + label.frame.size.height;
-    
-    defaultY = contentHeight + 3;
-    str = [NSString stringWithFormat:@"Date: %@", [SUMCommon getTimeString:timeNumber]];
-    label = [self getLabelWith:str font:[UIFont systemFontOfSize:10] lines:2 frame:CGRectMake(defaultX, defaultY, defaultWidth, defaultHeight*2)];
-    [scrollView addSubview:label];
-    contentHeight = defaultY + label.frame.size.height;
+//    defaultY = contentHeight + 3;
+//    str = [NSString stringWithFormat:@"%@ (%@)", [SUMCommon getSubcategoryString:[self.detailItem objectForKey:@"subcategory_id"]], [SUMCommon getCategoryString:[self.detailItem objectForKey:@"category_id"]]];
+//    label = [self getLabelWith:str font:[UIFont systemFontOfSize:10] lines:2 frame:CGRectMake(defaultX, defaultY, defaultWidth, defaultHeight*2)];
+//    [scrollView addSubview:label];
+//    contentHeight = defaultY + label.frame.size.height;
+//    
+//    defaultY = contentHeight + 3;
+//    str = @"Location: Stanford, CA";
+//    label = [self getLabelWith:str font:[UIFont systemFontOfSize:10] lines:2 frame:CGRectMake(defaultX, defaultY, defaultWidth, defaultHeight*2)];
+//    [scrollView addSubview:label];
+//    contentHeight = defaultY + label.frame.size.height;
+//    
+//    defaultY = contentHeight + 3;
+//    str = @"Networks: Stanford University";
+//    label = [self getLabelWith:str font:[UIFont systemFontOfSize:10] lines:2 frame:CGRectMake(defaultX, defaultY, defaultWidth, defaultHeight*2)];
+//    [scrollView addSubview:label];
+//    contentHeight = defaultY + label.frame.size.height;
+//    
+//    defaultY = contentHeight + 3;
+//    str = [NSString stringWithFormat:@"Date: %@", [SUMCommon getTimeString:timeNumber]];
+//    label = [self getLabelWith:str font:[UIFont systemFontOfSize:10] lines:2 frame:CGRectMake(defaultX, defaultY, defaultWidth, defaultHeight*2)];
+//    [scrollView addSubview:label];
+//    contentHeight = defaultY + label.frame.size.height;
     
     defaultWidth = 280;
     defaultHeight = 220;
@@ -224,12 +242,12 @@
     defaultX = 10;
     defaultWidth = 300;
     defaultY = contentHeight + 10;
-    UITextView *textView = [[UITextView alloc] initWithFrame:CGRectMake(defaultX, defaultY, defaultWidth, defaultHeight)];
+    textView = [[UITextView alloc] initWithFrame:CGRectMake(defaultX, defaultY, defaultWidth, defaultHeight)];
     textView.text = [self.detailItem objectForKey:@"body"];
     textView.backgroundColor = [UIColor clearColor];
     textView.font = [UIFont systemFontOfSize:12];
     [scrollView addSubview:textView];
-    CGRect frame = textView.frame;
+    frame = textView.frame;
     frame.size.height = textView.contentSize.height;
     textView.frame = frame;
     contentHeight = defaultY + textView.frame.size.height;
