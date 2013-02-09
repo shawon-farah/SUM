@@ -11,6 +11,8 @@
 #import "SUMAppDelegate.h"
 #import "SUMCommon.h"
 
+#define URL_SUFFIX @"http://supost.com/uploads/post/"
+
 @interface SUMDetailViewController ()
 - (void)configureView;
 @end
@@ -40,9 +42,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	// Do any additional setup after loading the view, typically from a nib.
-    
-    //    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Reply" style:UIBarButtonSystemItemAction target:self action:@selector(replyTapped:)];
     
     NSMutableArray *buttons = [[NSMutableArray alloc] init];
     UIButton *button;
@@ -61,11 +60,8 @@
     [button addTarget:self action:@selector(previousPost:) forControlEvents:UIControlEventTouchUpInside];
     buttonItem = [[[UIBarButtonItem alloc] initWithCustomView:button] autorelease];
     [buttons addObject:buttonItem];
-    //    [button release];
-    //    [buttonItem release];
     
     self.navigationItem.rightBarButtonItems = buttons;
-    //    [buttons release];
     [self setButtonPermission];
     [self configureView];
 }
@@ -107,6 +103,158 @@
     [self.navigationController popToViewController:[viewControllers objectAtIndex:button.tag] animated:YES];
 }
 
+- (UILabel *)getLabelWith:(NSString *)text font:(UIFont*)font lines:(int)lineNumber frame:(CGRect)frame
+{
+    UILabel *label = [[UILabel alloc] initWithFrame:frame];
+    label.numberOfLines = lineNumber;
+    if (lineNumber > 1)
+        label.lineBreakMode = NSLineBreakByWordWrapping;
+    label.backgroundColor = [UIColor clearColor];
+    label.text = text;
+    label.font = font;
+    CGSize size = [label.text sizeWithFont:label.font constrainedToSize:label.frame.size lineBreakMode:label.lineBreakMode];
+    label.frame = CGRectMake(frame.origin.x, frame.origin.y, frame.size.width, size.height);
+    
+    return label;
+}
+
+- (UIImageView *)getImageView:(NSString*)imageName withFrame:(CGRect)frame
+{
+    UIImageView *imageView = [[UIImageView alloc] initWithFrame:frame];
+    imageView.image = [UIImage imageNamed:@"placeholder.png"];
+    UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+    spinner.color = [UIColor blackColor];
+    spinner.center = CGPointMake(CGRectGetMidX(imageView.bounds), CGRectGetMidY(imageView.bounds));
+    [imageView addSubview:spinner];
+    dispatch_async(dispatch_get_global_queue(0,0), ^{
+        [spinner startAnimating];
+        NSData * data = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:[URL_SUFFIX stringByAppendingString:imageName]]];
+        if ( data == nil )
+            return;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            // WARNING: is the cell still using the same data by this point??
+            imageView.image = [UIImage imageWithData: data];
+            [spinner stopAnimating];
+            [spinner removeFromSuperview];
+        });
+    });
+    
+    return imageView;
+}
+
+- (void)configureView1
+{
+    [[scrollView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
+    int contentHeight = 0;
+    int defaultX = 20;
+    int defaultY = 3;
+    int defaultWidth = 280;
+    int defaultHeight = 21;
+    
+    UILabel *label = [self getLabelWith:[self.detailItem objectForKey:@"name"] font:[UIFont boldSystemFontOfSize:14] lines:2 frame:CGRectMake(defaultX, defaultY, defaultWidth, defaultHeight*2)];
+    [scrollView addSubview:label];
+    contentHeight = defaultY + label.frame.size.height;
+    
+    defaultY = contentHeight + 3;
+    defaultWidth = 180;
+    NSNumber *timeNumber = [self.detailItem objectForKey:@"time_posted"];
+    label = [self getLabelWith:[SUMCommon getDurationFromNow:timeNumber] font:[UIFont systemFontOfSize:10] lines:1 frame:CGRectMake(defaultX, defaultY, defaultWidth, defaultHeight)];
+    [scrollView addSubview:label];
+    contentHeight = defaultY + label.frame.size.height;
+    
+    UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+    button.frame = CGRectMake(defaultX+defaultWidth+5, defaultY, scrollView.frame.size.width-(defaultX+defaultWidth+5+20), 50);
+    button.backgroundColor = [UIColor greenColor];
+    button.titleLabel.font = [UIFont boldSystemFontOfSize:16];
+    [button setTitle:@"Reply" forState:UIControlStateNormal];
+//    button.layer.borderWidth = 1;
+    button.layer.cornerRadius = 10;
+    button.clipsToBounds = YES;
+    [button addTarget:self action:@selector(replyTapped:) forControlEvents:UIControlEventTouchUpInside];
+    [scrollView addSubview:button];
+    
+    defaultY = contentHeight + 3;
+    NSString *str = [NSString stringWithFormat:@"%@ (%@)", [SUMCommon getSubcategoryString:[self.detailItem objectForKey:@"subcategory_id"]], [SUMCommon getCategoryString:[self.detailItem objectForKey:@"category_id"]]];
+    label = [self getLabelWith:str font:[UIFont systemFontOfSize:10] lines:2 frame:CGRectMake(defaultX, defaultY, defaultWidth, defaultHeight*2)];
+    [scrollView addSubview:label];
+    contentHeight = defaultY + label.frame.size.height;
+    
+    defaultY = contentHeight + 3;
+    str = @"Location: Stanford, CA";
+    label = [self getLabelWith:str font:[UIFont systemFontOfSize:10] lines:2 frame:CGRectMake(defaultX, defaultY, defaultWidth, defaultHeight*2)];
+    [scrollView addSubview:label];
+    contentHeight = defaultY + label.frame.size.height;
+    
+    defaultY = contentHeight + 3;
+    str = @"Networks: Stanford University";
+    label = [self getLabelWith:str font:[UIFont systemFontOfSize:10] lines:2 frame:CGRectMake(defaultX, defaultY, defaultWidth, defaultHeight*2)];
+    [scrollView addSubview:label];
+    contentHeight = defaultY + label.frame.size.height;
+    
+    defaultY = contentHeight + 3;
+    str = [NSString stringWithFormat:@"Date: %@", [SUMCommon getTimeString:timeNumber]];
+    label = [self getLabelWith:str font:[UIFont systemFontOfSize:10] lines:2 frame:CGRectMake(defaultX, defaultY, defaultWidth, defaultHeight*2)];
+    [scrollView addSubview:label];
+    contentHeight = defaultY + label.frame.size.height;
+    
+    defaultWidth = 280;
+    defaultHeight = 220;
+    NSString *imageName = [self.detailItem objectForKey:@"image_source1"];
+    if ([imageName length] > 0 && ![imageName isEqualToString:@"NULL"])
+    {
+        defaultY = contentHeight + 3;
+        [scrollView addSubview:[self getImageView:imageName withFrame:CGRectMake(defaultX, defaultY, defaultWidth, defaultHeight)]];
+        contentHeight = defaultY + defaultHeight;
+    }
+    
+    imageName = [self.detailItem objectForKey:@"image_source2"];
+    if ([imageName length] > 0 && ![imageName isEqualToString:@"NULL"])
+    {
+        defaultY = contentHeight + 3;
+        [scrollView addSubview:[self getImageView:imageName withFrame:CGRectMake(defaultX, defaultY, defaultWidth, defaultHeight)]];
+        contentHeight = defaultY + defaultHeight;
+    }
+    
+    imageName = [self.detailItem objectForKey:@"image_source3"];
+    if ([imageName length] > 0 && ![imageName isEqualToString:@"NULL"])
+    {
+        defaultY = contentHeight + 3;
+        [scrollView addSubview:[self getImageView:imageName withFrame:CGRectMake(defaultX, defaultY, defaultWidth, defaultHeight)]];
+        contentHeight = defaultY + defaultHeight;
+    }
+    
+    imageName = [self.detailItem objectForKey:@"image_source4"];
+    if ([imageName length] > 0 && ![imageName isEqualToString:@"NULL"])
+    {
+        defaultY = contentHeight + 3;
+        [scrollView addSubview:[self getImageView:imageName withFrame:CGRectMake(defaultX, defaultY, defaultWidth, defaultHeight)]];
+        contentHeight = defaultY + defaultHeight;
+    }
+    
+    defaultX = 10;
+    defaultWidth = 300;
+    defaultY = contentHeight + 10;
+    UITextView *textView = [[UITextView alloc] initWithFrame:CGRectMake(defaultX, defaultY, defaultWidth, defaultHeight)];
+    textView.text = [self.detailItem objectForKey:@"body"];
+    textView.backgroundColor = [UIColor clearColor];
+    textView.font = [UIFont systemFontOfSize:12];
+    [scrollView addSubview:textView];
+    CGRect frame = textView.frame;
+    frame.size.height = textView.contentSize.height;
+    textView.frame = frame;
+    contentHeight = defaultY + textView.frame.size.height;
+    
+    defaultY = contentHeight + 10;
+    button = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    button.frame = CGRectMake(124, defaultY, 73, 44);
+    [button setTitle:@"Report" forState:UIControlStateNormal];
+    [button addTarget:self action:@selector(report:) forControlEvents:UIControlEventTouchUpInside];
+    [scrollView addSubview:button];
+    contentHeight = defaultY + button.frame.size.height;
+    
+    scrollView.contentSize = CGSizeMake(320, contentHeight+10);
+}
+
 - (void)configureView
 {
     // Update the user interface for the detail item.
@@ -114,102 +262,8 @@
     if (self.detailItem) {
         self.title = NSLocalizedString([self.detailItem objectForKey:@"name"], @"Details");
         [breadcrumb setItems:[SUMCommon getBreadcrumbItemsFor:self]];
-        name.text = [self.detailItem objectForKey:@"name"];
-        
-        NSNumber *timeNumber = [self.detailItem objectForKey:@"time_posted"];
-//        interval.text = [self getLastUpdateTimeInterval:timeNumber];
-        
-        timePosted.text = [SUMCommon getTimeString:timeNumber];
-//        SUMAppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
-        NSString *str = [SUMCommon getDurationFromNow:timeNumber];
-        str = [str stringByAppendingFormat:@"\n%@", [SUMCommon getSubcategoryString:[self.detailItem objectForKey:@"subcategory_id"]]];
-        str = [str stringByAppendingFormat:@" (%@)", [SUMCommon getCategoryString:[self.detailItem objectForKey:@"category_id"]]];
-        str = [str stringByAppendingFormat:@"\nDate: %@", [SUMCommon getTimeString:timeNumber]];
-        
-        attributes.text = str;
-        
-        NSString *urlSuffix = @"http://supost.com/uploads/post/";
-        
-        imageView1.image = [UIImage imageNamed:@"placeholder.png"];
-        NSString *imageName = [self.detailItem objectForKey:@"image_source1"];
-        if ([imageName length] > 0 && ![imageName isEqualToString:@"NULL"])
-            dispatch_async(dispatch_get_global_queue(0,0), ^{
-                [spinner1 startAnimating];
-                NSData * data = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:[urlSuffix stringByAppendingString:imageName]]];
-                if ( data == nil )
-                    return;
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    // WARNING: is the cell still using the same data by this point??
-                    imageView1.image = [UIImage imageWithData: data];
-                    [spinner1 stopAnimating];
-                    [spinner1 removeFromSuperview];
-                });
-            });
-        else {
-            [spinner1 removeFromSuperview];
-        }
-        
-        imageView2.image = [UIImage imageNamed:@"placeholder.png"];
-        imageName = [self.detailItem objectForKey:@"image_source2"];
-        if ([imageName length] > 0 && ![imageName isEqualToString:@"NULL"])
-            dispatch_async(dispatch_get_global_queue(0,0), ^{
-                [spinner2 startAnimating];
-                NSData * data = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:[urlSuffix stringByAppendingString:imageName]]];
-                if ( data == nil )
-                    return;
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    // WARNING: is the cell still using the same data by this point??
-                    imageView2.image = [UIImage imageWithData: data];
-                    [spinner2 stopAnimating];
-                    [spinner2 removeFromSuperview];
-                });
-            });
-        else {
-            [spinner2 removeFromSuperview];
-        }
-        
-        imageView3.image = [UIImage imageNamed:@"placeholder.png"];
-        imageName = [self.detailItem objectForKey:@"image_source3"];
-        if ([imageName length] > 0 && ![imageName isEqualToString:@"NULL"])
-            dispatch_async(dispatch_get_global_queue(0,0), ^{
-                [spinner3 startAnimating];
-                NSData * data = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:[urlSuffix stringByAppendingString:imageName]]];
-                if ( data == nil )
-                    return;
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    // WARNING: is the cell still using the same data by this point??
-                    imageView3.image = [UIImage imageWithData: data];
-                    [spinner3 stopAnimating];
-                    [spinner3 removeFromSuperview];
-                });
-            });
-        else {
-            [spinner3 removeFromSuperview];
-        }
-        
-        imageView4.image = [UIImage imageNamed:@"placeholder.png"];
-        imageName = [self.detailItem objectForKey:@"image_source4"];
-        if ([imageName length] > 0 && ![imageName isEqualToString:@"NULL"])
-            dispatch_async(dispatch_get_global_queue(0,0), ^{
-                [spinner4 startAnimating];
-                NSData * data = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:[urlSuffix stringByAppendingString:imageName]]];
-                if ( data == nil )
-                    return;
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    // WARNING: is the cell still using the same data by this point??
-                    imageView4.image = [UIImage imageWithData: data];
-                    [spinner4 stopAnimating];
-                    [spinner4 removeFromSuperview];
-                });
-            });
-        else {
-            [spinner4 removeFromSuperview];
-        }
-        
-        details.text = [self.detailItem objectForKey:@"body"];
+        [self configureView1];
     }
-    
-    scrollView.contentSize = CGSizeMake(320, 548);
 }
 
 - (SKPSMTPMessage*)configureSMTPMessage
@@ -382,11 +436,6 @@
     [UIView beginAnimations:@"transition" context:nil];
     [UIView setAnimationDuration:0.5];
     [UIView setAnimationTransition:UIViewAnimationTransitionCurlDown forView:self.navigationController.view cache:NO];
-//        SUMDetailViewController *viewController = [[SUMDetailViewController alloc] initWithNibName:@"SUMDetailViewController" bundle:nil];
-//        viewController.detailItem = [self.currentPostsArray objectAtIndex:self.currentIndex];
-//        viewController.currentIndex = self.currentIndex;
-//        viewController.currentPostsArray = self.currentPostsArray;
-//        [self.navigationController pushViewController:viewController animated:NO];
     self.detailItem = [self.currentPostsArray objectAtIndex:self.currentIndex];
     [self configureView];
     [UIView commitAnimations];
@@ -400,11 +449,6 @@
     [UIView beginAnimations:@"transition" context:nil];
     [UIView setAnimationDuration:0.5];
     [UIView setAnimationTransition:UIViewAnimationTransitionCurlUp forView:self.navigationController.view cache:NO];
-//        SUMDetailViewController *viewController = [[SUMDetailViewController alloc] initWithNibName:@"SUMDetailViewController" bundle:nil];
-//        viewController.detailItem = [self.currentPostsArray objectAtIndex:self.currentIndex];
-//        viewController.currentIndex = self.currentIndex;
-//        viewController.currentPostsArray = self.currentPostsArray;
-//        [self.navigationController pushViewController:viewController animated:NO];
     self.detailItem = [self.currentPostsArray objectAtIndex:self.currentIndex];
     [self configureView];
     [UIView commitAnimations];

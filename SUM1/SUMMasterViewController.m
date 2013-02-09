@@ -332,6 +332,8 @@
     self.detailViewController.currentIndex = indexPath.row;
     self.detailViewController.currentPostsArray = self.postsList;
     [self.navigationController pushViewController:self.detailViewController animated:YES];
+    
+    [tableView deselectRowAtIndexPath:indexPath animated:NO];
 }
 
 #pragma mark -

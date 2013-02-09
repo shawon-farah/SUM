@@ -136,6 +136,7 @@
 //    button.layer.borderColor = [c];
     button.layer.borderWidth = 1.0;
     button.layer.cornerRadius = 5.0;
+    button.clipsToBounds = YES;
     [button addTarget:viewController action:@selector(gotoView:) forControlEvents:UIControlEventTouchUpInside];
     [button setTitle:string forState:UIControlStateNormal];
     button.titleLabel.font = [UIFont systemFontOfSize:10];
