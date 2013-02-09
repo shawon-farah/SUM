@@ -156,6 +156,7 @@
     button.backgroundColor = [UIColor greenColor];
     button.titleLabel.font = [UIFont boldSystemFontOfSize:16];
     [button setTitle:@"Reply" forState:UIControlStateNormal];
+    [button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
 //    button.layer.borderWidth = 1;
     button.layer.cornerRadius = 10;
     button.clipsToBounds = YES;
