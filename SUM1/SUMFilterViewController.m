@@ -49,16 +49,6 @@
 //    self.navigationItem.leftItemsSupplementBackButton = YES;
 }
 
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-    
-    if ([self.categorySelectionButton.titleLabel.text isEqualToString:@"None"])
-        [self.browseButton setEnabled:NO];
-    else
-        [self.browseButton setEnabled:YES];
-}
-
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
@@ -79,9 +69,13 @@
 
 - (IBAction)browseAll:(id)sender
 {
-    SUMMasterViewController *viewController = [[SUMMasterViewController alloc] initWithNibName:@"SUMMasterViewController" bundle:nil];
-    viewController.filterDictionary = self.filterDictionary;
-    [self.navigationController pushViewController:viewController animated:YES];
+    if ([self.categorySelectionButton.titleLabel.text isEqualToString:@"None"])
+        [self.navigationController popViewControllerAnimated:YES];
+    else {
+        SUMMasterViewController *viewController = [[SUMMasterViewController alloc] initWithNibName:@"SUMMasterViewController" bundle:nil];
+        viewController.filterDictionary = self.filterDictionary;
+        [self.navigationController pushViewController:viewController animated:YES];
+    }
 }
 
 - (void)categorySelected:(id)category withSubcategory:(id)subcategory
