@@ -121,28 +121,12 @@
     NSLog(@"%@, %@, %@", [self.filterDictionary objectForKey:@"searchText"], [self.filterDictionary objectForKey:@"category"], [self.filterDictionary objectForKey:@"subcategory"]);
     self.tableView.contentOffset = CGPointMake(0, -65);
     [pull setState:PullToRefreshViewStateLoading];
-    /*  if wanna run filter on last fetched posts from parse
-     *  this operation will run the filter on last fetched 100 posts 
-     */
-//    PFObject *category = [self.filterDictionary objectForKey:@"category"];
-//    PFObject *subcategory = [self.filterDictionary objectForKey:@"subcategory"];
-//    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"category_id == %@ AND subcategory_id == %@", [category objectForKey:@"category_id"], [subcategory objectForKey:@"subcategory_id"]];
-//    
-//    self.title = NSLocalizedString([subcategory objectForKey:@"name"], @"Master");
-//    SUMAppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
-//    self.postsList = (NSMutableArray*)[appDelegate.postsList filteredArrayUsingPredicate:predicate];
-//    [self.tableView reloadData];
     
-    /*  if wanna run filter on parse and fetch filtered data from parse 
-     *  this will run the filter on whole parse db will get the most recent 100 filtered posts
-     */
-//    MBProgressHUD *hud = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
-//    [self.navigationController.view addSubview:hud];
-//    
-//    hud.delegate = self;
-//    hud.labelText = @"Loading";
-//    [hud show:YES];
-    NSString *titleText = [SUMCommon getSubcategoryStringFrom:[self.filterDictionary objectForKey:@"subcategory"]];
+    NSString *titleText = @"";
+    if ([self.filterDictionary objectForKey:@"searchText"]) 
+        titleText = [self.filterDictionary objectForKey:@"searchText"];
+    else
+        titleText = [SUMCommon getSubcategoryStringFrom:[self.filterDictionary objectForKey:@"subcategory"]];
     self.title = NSLocalizedString(titleText, @"Filter");
     [self.breadcrumb setItems:[SUMCommon getBreadcrumbItemsFor:self]];
     [SUMCommon getPosts:self withFilter:self.filterDictionary withRefreshView:pull];

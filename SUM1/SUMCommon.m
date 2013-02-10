@@ -16,16 +16,22 @@
 
 + (void)getPosts:(SUMMasterViewController*)view withFilter:(NSMutableDictionary*)filterDict withRefreshView:(id)refreshView
 {
-    PFObject *category = [filterDict objectForKey:@"category"];
+    PFObject *category = nil;
+    if ([filterDict objectForKey:@"category"])
+        category = [filterDict objectForKey:@"category"];
     PFObject *subcategory = nil;
     if ([filterDict objectForKey:@"subcategory"])
         subcategory = [filterDict objectForKey:@"subcategory"];
+    NSString *searchText = [filterDict objectForKey:@"searchText"];
     
     PFQuery *query = [PFQuery queryWithClassName:@"testsupostimport"];
     [query orderByDescending:@"time_posted"];
-    [query whereKey:@"category_id" equalTo:[category objectForKey:@"category_id"]];
+    if (category != nil)
+        [query whereKey:@"category_id" equalTo:[category objectForKey:@"category_id"]];
     if (subcategory != nil)
         [query whereKey:@"subcategory_id" equalTo:[subcategory objectForKey:@"subcategory_id"]];
+    if (![searchText isEqualToString:@""])
+        [query whereKey:@"name" containsString:searchText];
     [query whereKey:@"status" equalTo:[NSNumber numberWithInt:1]];
     query.limit = 100;
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
@@ -178,8 +184,12 @@
                 SUMMasterViewController *listView = (SUMMasterViewController*)aViewController;
                 if (listView.filterDictionary) {
                     if (aViewController == viewController) {
-                        [items addObject:[SUMCommon getBreadcrumbButtonWith:[SUMCommon getCategoryStringFrom:[listView.filterDictionary objectForKey:@"category"]] tag:11 delegate:aViewController]];
-                        [items addObject:[SUMCommon getBreadcrumbLabelWith:[SUMCommon getSubcategoryStringFrom:[listView.filterDictionary objectForKey:@"subcategory"]] constrainedToSize:size]];
+                        if ([listView.filterDictionary objectForKey:@"searchText"]) {
+                            [items addObject:[SUMCommon getBreadcrumbLabelWith:[listView.filterDictionary objectForKey:@"searchText"] constrainedToSize:size]];
+                        } else {
+                            [items addObject:[SUMCommon getBreadcrumbButtonWith:[SUMCommon getCategoryStringFrom:[listView.filterDictionary objectForKey:@"category"]] tag:11 delegate:aViewController]];
+                            [items addObject:[SUMCommon getBreadcrumbLabelWith:[SUMCommon getSubcategoryStringFrom:[listView.filterDictionary objectForKey:@"subcategory"]] constrainedToSize:size]];
+                        }
                     }
                 } else {
                     [items addObject:[SUMCommon getBreadcrumbButtonWith:aViewController.title tag:10 delegate:aViewController]];

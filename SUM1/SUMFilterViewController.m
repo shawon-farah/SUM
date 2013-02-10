@@ -49,6 +49,16 @@
 //    self.navigationItem.leftItemsSupplementBackButton = YES;
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    if ([self.searchTextField.text isEqualToString:@""])
+        [self.searchButton setEnabled:NO];
+    else
+        [self.searchButton setEnabled:YES];
+}
+
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
@@ -78,6 +88,14 @@
     }
 }
 
+- (IBAction)searchByKeyword:(id)sender
+{
+    [self.filterDictionary setObject:self.searchTextField.text forKey:@"searchText"];
+    SUMMasterViewController *viewController = [[SUMMasterViewController alloc] initWithNibName:@"SUMMasterViewController" bundle:nil];
+    viewController.filterDictionary = self.filterDictionary;
+    [self.navigationController pushViewController:viewController animated:YES];
+}
+
 - (void)categorySelected:(id)category withSubcategory:(id)subcategory
 {
     [self.categorySelectionButton setTitle:[NSString stringWithFormat:@"%@, %@", [subcategory objectForKey:@"name"], [category objectForKey:@"short_name"]] forState:UIControlStateNormal];
@@ -86,6 +104,14 @@
     [self.browseButton setEnabled:YES];
     
 //    [self browseAll:NULL];
+}
+
+- (IBAction)textFieldValueChanged:(id)sender
+{
+    if ([self.searchTextField.text isEqualToString:@""])
+        [self.searchButton setEnabled:NO];
+    else
+        [self.searchButton setEnabled:YES];
 }
 
 @end
