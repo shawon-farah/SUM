@@ -14,6 +14,7 @@
 @property (strong, nonatomic) IBOutlet UITextField *searchTextField;
 @property (strong, nonatomic) IBOutlet UIButton *categorySelectionButton;
 @property (strong, nonatomic) IBOutlet UIButton *locationSelectionButton;
+@property (strong, nonatomic) IBOutlet UIButton *browseButton;
 
 @property (strong, nonatomic) NSMutableDictionary *filterDictionary;
 

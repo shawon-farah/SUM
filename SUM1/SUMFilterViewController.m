@@ -21,6 +21,7 @@
     [_searchTextField release];
     [_categorySelectionButton release];
     [_locationSelectionButton release];
+    [_browseButton release];
     [_filterDictionary release];
     [super dealloc];
 }
@@ -41,11 +42,21 @@
     // Do any additional setup after loading the view from its nib.
     
     self.filterDictionary = [[NSMutableDictionary alloc] init];
-    
+
 //    self.navigationController.navigationBar.barStyle = UIBarStyleBlackOpaque;
 //    UIBarButtonItem *buttonItem = [[UIBarButtonItem alloc] initWithTitle:@"Back" style:UIBarButtonItemStyleBordered target:self action:@selector(goBack)];
 //    self.navigationItem.leftBarButtonItem = buttonItem;
 //    self.navigationItem.leftItemsSupplementBackButton = YES;
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    if ([self.categorySelectionButton.titleLabel.text isEqualToString:@"None"])
+        [self.browseButton setEnabled:NO];
+    else
+        [self.browseButton setEnabled:YES];
 }
 
 - (void)didReceiveMemoryWarning
@@ -68,7 +79,6 @@
 
 - (IBAction)browseAll:(id)sender
 {
-    [self.filterDictionary setObject:self.searchTextField.text forKey:@"searchText"];
     SUMMasterViewController *viewController = [[SUMMasterViewController alloc] initWithNibName:@"SUMMasterViewController" bundle:nil];
     viewController.filterDictionary = self.filterDictionary;
     [self.navigationController pushViewController:viewController animated:YES];
@@ -79,6 +89,7 @@
     [self.categorySelectionButton setTitle:[NSString stringWithFormat:@"%@, %@", [subcategory objectForKey:@"name"], [category objectForKey:@"short_name"]] forState:UIControlStateNormal];
     [self.filterDictionary setObject:category forKey:@"category"];
     [self.filterDictionary setObject:subcategory forKey:@"subcategory"];
+    [self.browseButton setEnabled:YES];
     
 //    [self browseAll:NULL];
 }
