@@ -338,7 +338,7 @@
     messageBody = [messageBody stringByAppendingString:@"To delete your post, use this link and click 'Delete your post.'\n"];
     messageBody = [messageBody stringByAppendingFormat:@"http://www.supost.com/add/publish/%@?security_id=%@ \n", postId, securityId];
     messageBody = [messageBody stringByAppendingString:@"----------------------------------------------------------------------------------------------------\n"];
-    messageBody = [messageBody stringByAppendingString:@"Safety: Never wire transfer money and be careful of fake checks.\nProtect yourself from scams and fraud: http://supost.com/safety.html\nCaution: This message may not be from this email address. This person's identity is not verified.\nIf you received this message in error, please email contact@supost.com"];
+    messageBody = [messageBody stringByAppendingString:@"Download the SUM iPhone App: https://itunes.apple.com/us/app/sum-supost-mobile/id590013767?mt=8 \nSafety: Never wire transfer money and be careful of fake checks.\nProtect yourself from scams and fraud: http://supost.com/safety.html\nCaution: This message may not be from this email address. This person's identity is not verified.\nIf you received this message in error, please email contact@supost.com"];
         
     NSMutableArray *parts_to_send = [NSMutableArray array];
     
