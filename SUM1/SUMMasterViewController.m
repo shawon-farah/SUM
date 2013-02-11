@@ -28,6 +28,7 @@
 @implementation SUMMasterViewController
 {
     PullToRefreshView *pull;
+    int limit;
 }
 
 @synthesize nibLoadedTableCell;
@@ -47,12 +48,15 @@
     [_breadcrumb release];
     [_detailViewController release];
     [_postsList release];
+    self.isUpdating = nil;
     [super dealloc];
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    self.isUpdating = NO;
+    limit = 100;
     
     self.navigationController.navigationBar.barStyle = UIBarStyleBlackOpaque;
     if (!self.filterDictionary) {
@@ -87,6 +91,7 @@
 
 - (void)foregroundRefresh:(NSNotification *)notification
 {
+    limit = 100;
     self.tableView.contentOffset = CGPointMake(0, -65);
     [pull setState:PullToRefreshViewStateLoading];
     if (self.filterDictionary)
@@ -110,6 +115,26 @@
     [self.navigationController popToViewController:[viewControllers objectAtIndex:button.tag] animated:YES];
 }
 
+- (void)addLoadMore
+{
+    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 30)];
+    view.backgroundColor = [UIColor clearColor];
+    UIActivityIndicatorView *activityView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    activityView.frame = CGRectMake(10, 0, 20, 30);
+    [activityView startAnimating];
+    [view addSubview:activityView];
+    
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(40, 0, 200, 20)];
+    label.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+    label.font = [UIFont boldSystemFontOfSize:13.0f];
+    label.backgroundColor = [UIColor clearColor];
+    label.textAlignment = UITextAlignmentCenter;
+    label.text = @"Loading";
+    [view addSubview:label];
+    
+    self.tableView.tableFooterView = view;
+}
+
 - (IBAction)filterTapped:(id)sender
 {
     SUMFilterViewController *viewController = [[SUMFilterViewController alloc] initWithNibName:@"SUMFilterViewController" bundle:nil];
@@ -129,30 +154,31 @@
         titleText = [SUMCommon getSubcategoryStringFrom:[self.filterDictionary objectForKey:@"subcategory"]];
     self.title = NSLocalizedString(titleText, @"Filter");
     [self.breadcrumb setItems:[SUMCommon getBreadcrumbItemsFor:self]];
-    [SUMCommon getPosts:self withFilter:self.filterDictionary withRefreshView:pull];
+    [SUMCommon getPosts:self withLimit:limit withFilter:self.filterDictionary withRefreshView:pull];
     
 }
 
 - (void)loadPostData
 {
-    PFQuery *query = [PFQuery queryWithClassName:@"testsupostimport"];
-    [query orderByDescending:@"time_posted"];
-    [query whereKey:@"status" equalTo:[NSNumber numberWithInt:1]];
-    query.limit = 100;
-    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        if (!error) {
-            self.postsList = [[NSMutableArray alloc] initWithArray:objects];
-            [self.tableView reloadData];
-            appDelegate.postsList = self.postsList;
-        } else {
-            // Log details of the failure
-            NSLog(@"Error: %@", error);
-            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Could not connect to server." delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
-            [alertView show];
-            [alertView release];
-        }
-        [pull finishedLoading];
-    }];
+    [SUMCommon getPosts:self withLimit:limit withFilter:nil withRefreshView:pull];
+//    PFQuery *query = [PFQuery queryWithClassName:@"testsupostimport"];
+//    [query orderByDescending:@"time_posted"];
+//    [query whereKey:@"status" equalTo:[NSNumber numberWithInt:1]];
+//    query.limit = limit;
+//    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+//        if (!error) {
+//            self.postsList = [[NSMutableArray alloc] initWithArray:objects];
+//            [self.tableView reloadData];
+//            appDelegate.postsList = self.postsList;
+//        } else {
+//            // Log details of the failure
+//            NSLog(@"Error: %@", error);
+//            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Could not connect to server." delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
+//            [alertView show];
+//            [alertView release];
+//        }
+//        [pull finishedLoading];
+//    }];
 }
 
 - (NSString *)getTimeString:(NSNumber *)timeNumber
@@ -322,6 +348,28 @@
         [self performSelectorInBackground:@selector(filterPosts) withObject:nil];
     else
         [self performSelectorInBackground:@selector(loadPostData) withObject:nil];
+}
+
+#pragma mark -
+#pragma mark UIScrollViewDelegate methods
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
+{
+    NSInteger currentOffset = scrollView.contentOffset.y;
+    NSInteger maximumOffset = scrollView.contentSize.height - scrollView.frame.size.height;
+    
+    
+    if (maximumOffset - currentOffset <= -20) {
+        if (!self.isUpdating) {
+            limit += 50;
+            self.isUpdating = YES;
+            [self.tableView setContentInset:UIEdgeInsetsMake(0, 0, 40, 0)];
+            if (self.filterDictionary)
+                [SUMCommon getPosts:self withLimit:limit withFilter:self.filterDictionary withRefreshView:nil];
+            else
+                [SUMCommon getPosts:self withLimit:limit withFilter:nil withRefreshView:nil];
+        }
+    }
 }
 
 @end

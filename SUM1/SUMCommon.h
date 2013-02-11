@@ -14,7 +14,7 @@
 
 @interface SUMCommon : NSObject
 
-+ (void)getPosts:(SUMMasterViewController*)view withFilter:(NSMutableDictionary*)filterDict withRefreshView:(id)refreshView;
++ (void)getPosts:(SUMMasterViewController*)view withLimit:(int)limit withFilter:(NSMutableDictionary*)filterDict withRefreshView:(id)refreshView;
 + (PFObject*)getCategory:(NSString*)categoryId;
 + (PFObject*)getSubcategory:(NSString*)subcategoryId;
 + (NSString*)getCategoryString:(NSString*)categoryId;

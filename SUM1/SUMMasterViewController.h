@@ -30,6 +30,7 @@
 @property (strong, nonatomic) NSMutableDictionary *filterDictionary;
 
 @property (strong, nonatomic) SUMDetailViewController *detailViewController;
+@property (nonatomic, assign) BOOL isUpdating;
 
 - (void)foregroundRefresh:(NSNotification *)notification;
 

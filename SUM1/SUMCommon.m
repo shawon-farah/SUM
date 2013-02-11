@@ -14,32 +14,39 @@
 
 @implementation SUMCommon
 
-+ (void)getPosts:(SUMMasterViewController*)view withFilter:(NSMutableDictionary*)filterDict withRefreshView:(id)refreshView
++ (void)getPosts:(SUMMasterViewController*)view withLimit:(int)limit withFilter:(NSMutableDictionary*)filterDict withRefreshView:(id)refreshView
 {
+    
     PFObject *category = nil;
-    if ([filterDict objectForKey:@"category"])
-        category = [filterDict objectForKey:@"category"];
     PFObject *subcategory = nil;
-    if ([filterDict objectForKey:@"subcategory"])
-        subcategory = [filterDict objectForKey:@"subcategory"];
-    NSString *searchText = [filterDict objectForKey:@"searchText"];
+    NSString *searchText = @"";
+    if (filterDict) {
+        if ([filterDict objectForKey:@"category"])
+            category = [filterDict objectForKey:@"category"];
+        if ([filterDict objectForKey:@"subcategory"])
+            subcategory = [filterDict objectForKey:@"subcategory"];
+        searchText = [filterDict objectForKey:@"searchText"];
+    }
     
     PFQuery *query = [PFQuery queryWithClassName:@"testsupostimport"];
     [query orderByDescending:@"time_posted"];
+    
     if (category != nil)
         [query whereKey:@"category_id" equalTo:[category objectForKey:@"category_id"]];
     if (subcategory != nil)
         [query whereKey:@"subcategory_id" equalTo:[subcategory objectForKey:@"subcategory_id"]];
     if (![searchText isEqualToString:@""])
         [query whereKey:@"name" containsString:searchText];
+    
     [query whereKey:@"status" equalTo:[NSNumber numberWithInt:1]];
-    query.limit = 100;
+    query.limit = limit;
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
             view.postsList = [[NSMutableArray alloc] initWithArray:objects];
             [view.tableView reloadData];
             SUMAppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
             appDelegate.postsList = view.postsList;
+            view.isUpdating = view.isUpdating ? NO : NO;
         } else {
             // Log details of the failure
             NSLog(@"Error: %@", error);
@@ -47,8 +54,8 @@
             [alertView show];
             [alertView release];
         }
-//        [MBProgressHUD hideHUDForView:view.navigationController.view animated:YES];
-        [refreshView finishedLoading];
+        if (refreshView)
+            [refreshView finishedLoading];
     }];
 }
 
