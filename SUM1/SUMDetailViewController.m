@@ -52,6 +52,19 @@
     
     self.navigationItem.rightBarButtonItems = buttons;
     [self setButtonPermission];
+    
+    UISwipeGestureRecognizer *rightRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(previousPost:)];
+    rightRecognizer.direction = UISwipeGestureRecognizerDirectionRight;
+    [rightRecognizer setNumberOfTouchesRequired:1];
+    [scrollView addGestureRecognizer:rightRecognizer];
+    [rightRecognizer release];
+    
+    UISwipeGestureRecognizer *leftRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(nextPost:)];
+    leftRecognizer.direction = UISwipeGestureRecognizerDirectionLeft;
+    [leftRecognizer setNumberOfTouchesRequired:1];
+    [scrollView addGestureRecognizer:leftRecognizer];
+    [leftRecognizer release];
+    
     [self configureView];
 }
 
@@ -458,28 +471,34 @@
 
 - (IBAction)nextPost:(id)sender
 {
-    self.currentIndex++;
-    [UIView beginAnimations:@"transition" context:nil];
-    [UIView setAnimationDuration:0.5];
-    [UIView setAnimationTransition:UIViewAnimationTransitionCurlDown forView:self.navigationController.view cache:NO];
-    self.detailItem = [self.currentPostsArray objectAtIndex:self.currentIndex];
-    [self configureView];
-    [UIView commitAnimations];
-    
-    [self setButtonPermission];
+    int count = self.currentPostsArray.count;
+    count -= 1;
+    if (self.currentIndex < count) {
+        self.currentIndex++;
+        [UIView beginAnimations:@"transition" context:nil];
+        [UIView setAnimationDuration:0.5];
+        [UIView setAnimationTransition:UIViewAnimationTransitionCurlDown forView:self.navigationController.view cache:NO];
+        self.detailItem = [self.currentPostsArray objectAtIndex:self.currentIndex];
+        [self configureView];
+        [UIView commitAnimations];
+        
+        [self setButtonPermission];
+    }
 }
 
 - (IBAction)previousPost:(id)sender
 {
-    self.currentIndex--;
-    [UIView beginAnimations:@"transition" context:nil];
-    [UIView setAnimationDuration:0.5];
-    [UIView setAnimationTransition:UIViewAnimationTransitionCurlUp forView:self.navigationController.view cache:NO];
-    self.detailItem = [self.currentPostsArray objectAtIndex:self.currentIndex];
-    [self configureView];
-    [UIView commitAnimations];
-    
-    [self setButtonPermission];
+    if (self.currentIndex > 0) {
+        self.currentIndex--;
+        [UIView beginAnimations:@"transition" context:nil];
+        [UIView setAnimationDuration:0.5];
+        [UIView setAnimationTransition:UIViewAnimationTransitionCurlUp forView:self.navigationController.view cache:NO];
+        self.detailItem = [self.currentPostsArray objectAtIndex:self.currentIndex];
+        [self configureView];
+        [UIView commitAnimations];
+        
+        [self setButtonPermission];
+    }
 }
 
 - (void) setButtonPermission
