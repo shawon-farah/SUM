@@ -241,18 +241,21 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *CellIdentifier = @"PostsListCell";
+    PFObject *object = (PFObject *)[self.postsList objectAtIndex:indexPath.row];
     
     SUMImageWithTwoSubtitleCell *cell = (SUMImageWithTwoSubtitleCell*)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    if (cell == nil) {
-        [[NSBundle mainBundle] loadNibNamed:@"SUMImageWithTwoSubtitleCell" owner:self options:NULL];
-        cell = (SUMImageWithTwoSubtitleCell*)nibLoadedTableCell;
-        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-    }
+    
 
-    PFObject *object = (PFObject *)[self.postsList objectAtIndex:indexPath.row];
+//    PFObject *object = (PFObject *)[self.postsList objectAtIndex:indexPath.row];
     
     NSString *imageName = [object objectForKey:@"image_source1"];
     if ([imageName length] > 0 && ![imageName isEqualToString:@"NULL"]) {
+        if (cell == nil) {
+            [[NSBundle mainBundle] loadNibNamed:@"SUMImageWithTwoSubtitleCell" owner:self options:NULL];
+            cell = (SUMImageWithTwoSubtitleCell*)nibLoadedTableCell;
+            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        }
+        
         [cell.spinner startAnimating];
         [cell bringSubviewToFront:cell.spinner];
         NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", IMAGE_URL_SUFFIX, imageName]];
@@ -268,8 +271,15 @@
                 [cell.spinner removeFromSuperview];
             });
         });
-    } else
-        [cell.spinner removeFromSuperview];
+    } else {
+        if (cell == nil) {
+            [[NSBundle mainBundle] loadNibNamed:@"SUMTwoSubtitleCell" owner:self options:NULL];
+            cell = (SUMImageWithTwoSubtitleCell*)nibLoadedTableCell;
+            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        }
+        
+//        [cell.spinner removeFromSuperview];
+    }
     
     cell.titleTextLabel.text = [object objectForKey:@"name"];
     cell.detailsTextLabel.text = [self getDetailsText:[object objectForKey:@"body"]];
