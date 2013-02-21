@@ -9,6 +9,9 @@
 /* Begin PBXBuildFile section */
 		038DA2E3169BFB22006194A2 /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 038DA2E2169BFB22006194A2 /* icon.png */; };
 		038DA2E5169BFB2B006194A2 /* icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 038DA2E4169BFB2B006194A2 /* icon@2x.png */; };
+		890FBFB416D6813D0099D7E6 /* AsyncImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 890FBFAF16D6813D0099D7E6 /* AsyncImageView.m */; };
+		890FBFB516D6813D0099D7E6 /* ImageCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 890FBFB116D6813D0099D7E6 /* ImageCache.m */; };
+		890FBFB616D6813D0099D7E6 /* NSString+QMAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 890FBFB316D6813D0099D7E6 /* NSString+QMAdditions.m */; };
 		8920194C169C917B001FE455 /* SUMFilterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8920194A169C917B001FE455 /* SUMFilterViewController.m */; };
 		8920194D169C917B001FE455 /* SUMFilterViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8920194B169C917B001FE455 /* SUMFilterViewController.xib */; };
 		89201956169C9DA1001FE455 /* SUMCategorySelectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 89201954169C9DA1001FE455 /* SUMCategorySelectionViewController.m */; };
@@ -63,6 +66,12 @@
 /* Begin PBXFileReference section */
 		038DA2E2169BFB22006194A2 /* icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = icon.png; path = ../icon.png; sourceTree = "<group>"; };
 		038DA2E4169BFB2B006194A2 /* icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "icon@2x.png"; path = "../icon@2x.png"; sourceTree = "<group>"; };
+		890FBFAE16D6813D0099D7E6 /* AsyncImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AsyncImageView.h; sourceTree = "<group>"; };
+		890FBFAF16D6813D0099D7E6 /* AsyncImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AsyncImageView.m; sourceTree = "<group>"; };
+		890FBFB016D6813D0099D7E6 /* ImageCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageCache.h; sourceTree = "<group>"; };
+		890FBFB116D6813D0099D7E6 /* ImageCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageCache.m; sourceTree = "<group>"; };
+		890FBFB216D6813D0099D7E6 /* NSString+QMAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+QMAdditions.h"; sourceTree = "<group>"; };
+		890FBFB316D6813D0099D7E6 /* NSString+QMAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+QMAdditions.m"; sourceTree = "<group>"; };
 		89201949169C917B001FE455 /* SUMFilterViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SUMFilterViewController.h; sourceTree = "<group>"; };
 		8920194A169C917B001FE455 /* SUMFilterViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SUMFilterViewController.m; sourceTree = "<group>"; };
 		8920194B169C917B001FE455 /* SUMFilterViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SUMFilterViewController.xib; sourceTree = "<group>"; };
@@ -221,6 +230,19 @@
 			name = Graphics;
 			sourceTree = "<group>";
 		};
+		890FBFAD16D681070099D7E6 /* AsyncImageView */ = {
+			isa = PBXGroup;
+			children = (
+				890FBFAE16D6813D0099D7E6 /* AsyncImageView.h */,
+				890FBFAF16D6813D0099D7E6 /* AsyncImageView.m */,
+				890FBFB016D6813D0099D7E6 /* ImageCache.h */,
+				890FBFB116D6813D0099D7E6 /* ImageCache.m */,
+				890FBFB216D6813D0099D7E6 /* NSString+QMAdditions.h */,
+				890FBFB316D6813D0099D7E6 /* NSString+QMAdditions.m */,
+			);
+			name = AsyncImageView;
+			sourceTree = "<group>";
+		};
 		89DB39FF166B9C3400567967 /* SMTPSend */ = {
 			isa = PBXGroup;
 			children = (
@@ -283,6 +305,7 @@
 		89F93B5F166B59A1000A279E /* SUM1 */ = {
 			isa = PBXGroup;
 			children = (
+				890FBFAD16D681070099D7E6 /* AsyncImageView */,
 				037B8A23169ACA3C0020F6CD /* Common */,
 				037B8A22169ACA210020F6CD /* TableCells */,
 				037B8A20169ACA070020F6CD /* ViewControllers */,
@@ -401,6 +424,9 @@
 				89201956169C9DA1001FE455 /* SUMCategorySelectionViewController.m in Sources */,
 				896CDCA616B6DE4100D51BEC /* SUMCommon.m in Sources */,
 				89F0AA2416C1631100139E18 /* PullToRefreshView.m in Sources */,
+				890FBFB416D6813D0099D7E6 /* AsyncImageView.m in Sources */,
+				890FBFB516D6813D0099D7E6 /* ImageCache.m in Sources */,
+				890FBFB616D6813D0099D7E6 /* NSString+QMAdditions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -256,21 +256,23 @@
             cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
         }
         
-        [cell.spinner startAnimating];
-        [cell bringSubviewToFront:cell.spinner];
+//        [cell.spinner startAnimating];
+//        [cell bringSubviewToFront:cell.spinner];
         NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", IMAGE_URL_SUFFIX, imageName]];
-        dispatch_async(dispatch_get_global_queue(0,0), ^{
-            NSData * data = [[NSData alloc] initWithContentsOfURL:url];
-            if ( data == nil )
-                return;
-            dispatch_async(dispatch_get_main_queue(), ^{
-                // WARNING: is the cell still using the same data by this point??
-                cell.imageView.image = [UIImage imageWithData: data];
-                cell.imageView.contentMode = UIViewContentModeScaleAspectFit;
-                [cell.spinner stopAnimating];
-                [cell.spinner removeFromSuperview];
-            });
-        });
+        [cell.imageView setLoaderImage:@"placeholder.png"];
+        [cell.imageView loadImageFromURL:url.absoluteString];
+//        dispatch_async(dispatch_get_global_queue(0,0), ^{
+//            NSData * data = [[NSData alloc] initWithContentsOfURL:url];
+//            if ( data == nil )
+//                return;
+//            dispatch_async(dispatch_get_main_queue(), ^{
+//                // WARNING: is the cell still using the same data by this point??
+//                cell.imageView.image = [UIImage imageWithData: data];
+//                cell.imageView.contentMode = UIViewContentModeScaleAspectFit;
+//                [cell.spinner stopAnimating];
+//                [cell.spinner removeFromSuperview];
+//            });
+//        });
     } else {
         if (cell == nil) {
             [[NSBundle mainBundle] loadNibNamed:@"SUMTwoSubtitleCell" owner:self options:NULL];

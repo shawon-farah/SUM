@@ -10,6 +10,7 @@
 #import "SKPSMTPMessage.h"
 #import "SUMAppDelegate.h"
 #import "SUMCommon.h"
+#import "AsyncImageView.h"
 
 #define URL_SUFFIX @"http://supost.com/uploads/post/"
 
@@ -122,25 +123,29 @@
 
 - (UIImageView *)getImageView:(NSString*)imageName withFrame:(CGRect)frame
 {
-    UIImageView *imageView = [[UIImageView alloc] initWithFrame:frame];
-    imageView.image = [UIImage imageNamed:@"placeholder.png"];
-    UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
-    spinner.color = [UIColor blackColor];
-    spinner.center = CGPointMake(CGRectGetMidX(imageView.bounds), CGRectGetMidY(imageView.bounds));
-    [imageView addSubview:spinner];
-    dispatch_async(dispatch_get_global_queue(0,0), ^{
-        [spinner startAnimating];
-        NSData * data = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:[URL_SUFFIX stringByAppendingString:imageName]]];
-        if ( data == nil )
-            return;
-        dispatch_async(dispatch_get_main_queue(), ^{
-            // WARNING: is the cell still using the same data by this point??
-            imageView.image = [UIImage imageWithData: data];
-            imageView.contentMode = UIViewContentModeScaleAspectFit;
-            [spinner stopAnimating];
-            [spinner removeFromSuperview];
-        });
-    });
+    AsyncImageView *imageView = [[AsyncImageView alloc] initWithFrame:frame];
+//    imageView.image = [UIImage imageNamed:@"placeholder.png"];
+//    UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+//    spinner.color = [UIColor blackColor];
+//    spinner.center = CGPointMake(CGRectGetMidX(imageView.bounds), CGRectGetMidY(imageView.bounds));
+//    [imageView addSubview:spinner];
+//    dispatch_async(dispatch_get_global_queue(0,0), ^{
+//        [spinner startAnimating];
+//        NSData * data = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:[URL_SUFFIX stringByAppendingString:imageName]]];
+//        if ( data == nil )
+//            return;
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            // WARNING: is the cell still using the same data by this point??
+//            imageView.image = [UIImage imageWithData: data];
+//            imageView.contentMode = UIViewContentModeScaleAspectFit;
+//            [spinner stopAnimating];
+//            [spinner removeFromSuperview];
+//        });
+//    });
+    [imageView setLoaderImage:@"placeholder.png"];
+    NSURL *url = [NSURL URLWithString:[URL_SUFFIX stringByAppendingString:imageName]];
+    [imageView loadImageFromURL:url.absoluteString];
+    imageView.contentMode = UIViewContentModeScaleAspectFit;
     
     return imageView;
 }
