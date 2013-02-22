@@ -30,7 +30,7 @@
                   clientKey:@"uDe5rnD4rbjMVP76BmyJ9M8BmjHi4vdKZqPR4KII"];
     
     PFQuery *queryCategory = [PFQuery queryWithClassName:@"category"];
-    [queryCategory orderByAscending:@"category_id"];
+    [queryCategory orderByAscending:@"sort_order"];
     self.categoryList = (NSMutableArray*)[queryCategory findObjects];
     /*[queryCategory findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
@@ -39,6 +39,7 @@
     }];*/
     PFQuery *querySubcategory = [PFQuery queryWithClassName:@"subcategory"];
     [querySubcategory orderByAscending:@"category_id"];
+    [querySubcategory orderByAscending:@"name"];
     self.subcategoryList = (NSMutableArray*)[querySubcategory findObjects];
     /*[querySubcategory findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
