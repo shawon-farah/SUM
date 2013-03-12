@@ -44,6 +44,7 @@
         if (!error) {
             view.postsList = [[NSMutableArray alloc] initWithArray:objects];
             [view.tableView reloadData];
+            [view.tableView setContentInset:UIEdgeInsetsMake(0, 0, 0, 0)];
             SUMAppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
             appDelegate.postsList = view.postsList;
             view.isUpdating = view.isUpdating ? NO : NO;

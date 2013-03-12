@@ -100,7 +100,10 @@
 {
     [self.categorySelectionButton setTitle:[NSString stringWithFormat:@"%@, %@", [subcategory objectForKey:@"name"], [category objectForKey:@"short_name"]] forState:UIControlStateNormal];
     [self.filterDictionary setObject:category forKey:@"category"];
-    [self.filterDictionary setObject:subcategory forKey:@"subcategory"];
+    if ([[subcategory objectForKey:@"subcategory_id"] intValue] > 0)
+        [self.filterDictionary setObject:subcategory forKey:@"subcategory"];
+    else
+        [self.filterDictionary removeObjectForKey:@"subcategory"];
     [self.browseButton setEnabled:YES];
     
 //    [self browseAll:NULL];
